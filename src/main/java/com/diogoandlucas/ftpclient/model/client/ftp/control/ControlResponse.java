@@ -1,16 +1,16 @@
-package com.diogoandlucas.ftpclient.model.client.ftp;
+package com.diogoandlucas.ftpclient.model.client.ftp.control;
 
-public class Response {
+public class ControlResponse {
 
-    private final ResponseCode code;
+    private final ControlResponseCode code;
     private final String message;
 
-    public Response(ResponseCode code, String message) {
+    public ControlResponse(ControlResponseCode code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public ResponseCode getCode() {
+    public ControlResponseCode getCode() {
         return code;
     }
 

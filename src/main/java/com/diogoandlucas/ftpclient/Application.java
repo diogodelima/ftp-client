@@ -1,12 +1,8 @@
 package com.diogoandlucas.ftpclient;
 
-import com.diogoandlucas.ftpclient.model.client.Client;
-import com.diogoandlucas.ftpclient.model.client.ftp.ClientFTP;
-import com.diogoandlucas.ftpclient.model.client.ftp.ControlFTP;
-import com.diogoandlucas.ftpclient.model.client.ftp.Response;
-import com.diogoandlucas.ftpclient.model.client.ftp.ResponseCode;
+import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlFTP;
+import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;
 
-import java.net.ServerSocket;
 import java.util.Arrays;
 
 public class Application {
@@ -15,7 +11,7 @@ public class Application {
 
         System.out.println("inicio");
         ControlFTP client = new ControlFTP("eu-central-1.sftpcloud.io");
-        Response response = client.getResponse();
+        ControlResponse response = client.getResponse();
         System.out.println(response);
         response = client.sendMessage("USER d60625c2599e4c3382f27e046126d894");
         System.out.println(response);

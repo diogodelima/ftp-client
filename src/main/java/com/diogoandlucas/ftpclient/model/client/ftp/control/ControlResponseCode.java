@@ -1,6 +1,6 @@
-package com.diogoandlucas.ftpclient.model.client.ftp;
+package com.diogoandlucas.ftpclient.model.client.ftp.control;
 
-public enum ResponseCode {
+public enum ControlResponseCode {
 
     CODE_110("Restart marker reply"),
     CODE_120("Service ready in %d minutes"),
@@ -47,7 +47,7 @@ public enum ResponseCode {
 
     private final String description;
 
-    ResponseCode(String description){
+    ControlResponseCode(String description){
         this.description = description;
     }
 
