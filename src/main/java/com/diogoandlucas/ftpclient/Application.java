@@ -1,5 +1,6 @@
 package com.diogoandlucas.ftpclient;
 
+import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlCommand;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlFTP;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;
 
@@ -13,17 +14,24 @@ public class Application {
         ControlFTP client = new ControlFTP("eu-central-1.sftpcloud.io");
         ControlResponse response = client.getResponse();
         System.out.println(response);
-        response = client.sendMessage("USER d60625c2599e4c3382f27e046126d894");
+        response = client
+                .argument("33975ed0bd3746b6986c4a48a8fbcfbf")
+                .sendMessage(ControlCommand.USER);
         System.out.println(response);
-        response = client.sendMessage("PASS 7f9SgvxkeajTZqrJwhMnPzBmrPVIHCFs");
+        response = client
+                .argument("zKpaLansmEIQMsYEMDo8tO2J1FhcpOiV")
+                .sendMessage(ControlCommand.PASS);
         System.out.println(response);
         System.out.println(response);
-        response = client.sendMessage("PASV");
+        response = client
+                .sendMessage(ControlCommand.PASV);
         System.out.println(response);
         System.out.println(Arrays.toString(client.getIpAndPort(response.getMessage())));
-        response = client.sendMessage("PWD");
+        response = client
+                .sendMessage(ControlCommand.PWD);
         System.out.println(response);
-        response = client.sendMessage("MLSD");
+        response = client
+                .sendMessage(ControlCommand.MLSD);
         System.out.println(response);
         client.close();
     }

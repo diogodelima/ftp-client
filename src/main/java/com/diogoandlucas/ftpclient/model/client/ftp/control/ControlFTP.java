@@ -7,11 +7,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-public class ControlFTP extends Client<ControlResponse, String> {
+public class ControlFTP extends Client<ControlResponse, ControlCommand> {
 
     private final PrintWriter out;
     private final BufferedReader in;
     private DataFTP data;
+    private String argument;
 
     public ControlFTP(String ip) {
         super(ip, 21);
@@ -20,8 +21,13 @@ public class ControlFTP extends Client<ControlResponse, String> {
     }
 
     @Override
-    public ControlResponse sendMessage(String message) {
-        this.out.write(message);
+    public ControlResponse sendMessage(ControlCommand command) {
+        String message = command.name();
+        if(this.argument != null){
+            message+=" " + this.argument;
+            this.argument = null;
+        }
+        this.out.println(message);
         return this.getResponse();
     }
 
@@ -45,4 +51,8 @@ public class ControlFTP extends Client<ControlResponse, String> {
         return new String[]{ip, String.valueOf(port)};
     }
 
+    public ControlFTP argument(String argument){
+        this.argument = argument;
+        return this;
+    }
 }
