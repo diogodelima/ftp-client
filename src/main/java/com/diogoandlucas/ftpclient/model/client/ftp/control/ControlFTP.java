@@ -11,7 +11,6 @@ public class ControlFTP extends Client<ControlResponse, ControlCommand> {
 
     private final PrintWriter out;
     private final BufferedReader in;
-    private DataFTP data;
     private String argument;
 
     public ControlFTP(String ip) {

@@ -2,10 +2,17 @@ package com.diogoandlucas.ftpclient.model.client.ftp.data;
 
 import com.diogoandlucas.ftpclient.model.client.Client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class DataFTP extends Client<String, String> {
 
-    protected DataFTP(String ip) {
-        super(ip, 20);
+    private final BufferedReader in;
+
+    public DataFTP(String ip, int port) {
+        super(ip, port);
+        this.in = new BufferedReader(new InputStreamReader(this.getIn()));
     }
 
     @Override
@@ -15,6 +22,15 @@ public class DataFTP extends Client<String, String> {
 
     @Override
     public String getResponse() {
-        return "";
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        try {
+            while ((line = in.readLine()) != null)
+                stringBuilder.append(line).append("\n");
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+        return stringBuilder.toString();
     }
 }
