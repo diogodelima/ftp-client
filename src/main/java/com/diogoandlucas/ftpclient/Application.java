@@ -36,7 +36,11 @@ public class Application {
                 .sendMessage(ControlCommand.MLSD);
         System.out.println(response);
         client.close();*/
-        try(FTPController controller = new FTPController("eu-central-1.sftpcloud.io", "12cf868e95b3428a8a860d787e2767e8", "PH1s8OqL5J0RmKlxTw4axN7AoKG609TZ")){
+        try(FTPController controller = new FTPController("eu-central-1.sftpcloud.io", "1f8821cce37f4937a7fc5ed341114753", "YgPDQS9pas9eMnPS1Rw6xoZhOt0NlelM")){
+            System.out.println(controller.getDirectories());
+            System.out.println("»»»»»»»»»»»»»»»»");
+            controller.makeDirectory("directory/teste.txt");
+            System.out.println("»»»»»»»»»»»»»»»»");
             System.out.println(controller.getDirectories());
         }catch(FTPException e){
             System.out.println(e.getResponse());

@@ -43,14 +43,36 @@ private DataFTP dataConnection;
     public String getDirectories() throws FTPException {
         enterInPassiveMode();
         ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);
-        if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to get directories", response);
-        return dataConnection.getResponse();
+        if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to open data connection", response);
+        String directories = dataConnection.getResponse();
+        response = controlConnection.getResponse();
+        if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
+        return directories;
+    }
+
+    public void makeDirectory(String pathname) throws FTPException {
+
+        ControlResponse response = controlConnection
+                .argument(pathname)
+                .sendMessage(ControlCommand.MKD);
+
+        if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to create the directory", response);
     }
 
     @Override
     public void close() throws Exception {
         this.controlConnection.close();
-        if(dataConnection != null)
-            dataConnection.close();
+        closeDataConnection();
     }
+
+    private void closeDataConnection() {
+        if(dataConnection != null) {
+            try {
+                dataConnection.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 }
