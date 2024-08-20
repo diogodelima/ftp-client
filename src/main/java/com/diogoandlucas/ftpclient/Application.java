@@ -5,6 +5,7 @@ import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlCommand;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlFTP;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;
+import com.diogoandlucas.ftpclient.view.View;
 
 import java.util.Arrays;
 
@@ -42,10 +43,17 @@ public class Application {
             controller.makeDirectory("directory");
             System.out.println("»»»»»»»»»»»»»»»»");
             System.out.println(controller.getItems().toString());
+            System.out.println("»»»»»»»»»»»»»»»»");
+            controller.removeFile("directory/file.txt");
+            System.out.println("»»»»»»»»»»»»»»»»");
+            controller.removeDirectory("directory");
+            System.out.println("»»»»»»»»»»»»»»»»");
+            System.out.println(controller.getItems().toString());
+
         }catch(FTPException e){
             System.out.println(e.getResponse());
         };
-
+        new View(1280, 720);
     }
 
 }

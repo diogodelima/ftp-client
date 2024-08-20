@@ -89,6 +89,24 @@ private DataFTP dataConnection;
         if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to create the directory", response);
     }
 
+    public void removeDirectory(String pathname) throws FTPException {
+
+        ControlResponse response = controlConnection
+                .argument(pathname)
+                .sendMessage(ControlCommand.RMD);
+
+        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove directory", response);
+    }
+
+    public void removeFile(String pathname) throws FTPException {
+
+        ControlResponse response = controlConnection
+                .argument(pathname)
+                .sendMessage(ControlCommand.DELE);
+
+        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove file", response);
+    }
+
     @Override
     public void close() throws Exception {
         this.controlConnection.close();
