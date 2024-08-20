@@ -8,7 +8,13 @@ import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlFTP;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponseCode;
 import com.diogoandlucas.ftpclient.model.client.ftp.data.DataFTP;
+import com.diogoandlucas.ftpclient.model.client.item.Item;
+import com.diogoandlucas.ftpclient.model.client.item.impl.DirectoryItem;
+import com.diogoandlucas.ftpclient.model.client.item.impl.FileItem;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FTPController implements AutoCloseable {
@@ -40,14 +46,38 @@ private DataFTP dataConnection;
         this.dataConnection = new DataFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
     }
 
-    public String getDirectories() throws FTPException {
+    public List<Item> getItems() throws FTPException {
         enterInPassiveMode();
         ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);
         if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to open data connection", response);
-        String directories = dataConnection.getResponse();
+        String data = dataConnection.getResponse();
         response = controlConnection.getResponse();
         if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
-        return directories;
+        closeDataConnection();
+
+        String[] singleDataArray = data.split("\n");
+        List<Item> items = new ArrayList<>();
+
+        for (String singleData : singleDataArray) {
+
+            String[] information = singleData.split(";");
+            String type = information[0].substring(information[0].indexOf("=") + 1);
+            long size = Long.parseLong(information[1].substring(information[1].indexOf("=") + 1));
+            LocalDateTime lastModify = getLocalDateTime(information);
+            String name = information[3].trim();
+
+            Item item;
+            
+            if (type.equalsIgnoreCase("dir"))
+                item = new DirectoryItem(name, lastModify, size);
+            else if (type.equalsIgnoreCase("file"))
+                item = new FileItem(name, lastModify, size);
+            else throw new IllegalArgumentException("Invalid type " + type);
+
+            items.add(item);
+        }
+
+        return items;
     }
 
     public void makeDirectory(String pathname) throws FTPException {
@@ -73,6 +103,17 @@ private DataFTP dataConnection;
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static LocalDateTime getLocalDateTime(String[] information) {
+        String dateFormatted = information[2].substring(information[2].indexOf("=") + 1);
+        int year = Integer.parseInt(dateFormatted.substring(0, 4));
+        int month = Integer.parseInt(dateFormatted.substring(4, 6));
+        int day = Integer.parseInt(dateFormatted.substring(6, 8));
+        int hour = Integer.parseInt(dateFormatted.substring(8, 10));
+        int minute = Integer.parseInt(dateFormatted.substring(10, 12));
+        int second = Integer.parseInt(dateFormatted.substring(12, 14));
+        return LocalDateTime.of(year, month, day, hour, minute, second);
     }
 
 }
