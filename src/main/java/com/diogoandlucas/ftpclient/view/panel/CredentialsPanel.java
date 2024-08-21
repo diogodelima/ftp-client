@@ -14,18 +14,21 @@ public class CredentialsPanel extends JPanel {
         this.setBackground(ColorConstants.BACKGROUND);
         JLabel serverLabel, userLabel, passwordLabel;
         JTextField serverTextField, userTextField, passwordTextField;
+        JButton connectButton;
         serverLabel = createLabel("Servidor:", ColorConstants.LABEL);
         userLabel = createLabel("Utilizador:", ColorConstants.LABEL);
         passwordLabel = createLabel("Password:", ColorConstants.LABEL);
         serverTextField = createTextField(12, ColorConstants.FIELD, ColorConstants.LABEL, 3, 1);
         userTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL, 3, 1);
         passwordTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL, 3, 1);
+        connectButton = createButton("Conectar", ColorConstants.FIELD, ColorConstants.LABEL, 5, 5);
         this.add(serverLabel);
         this.add(serverTextField);
         this.add(userLabel);
         this.add(userTextField);
         this.add(passwordLabel);
         this.add(passwordTextField);
+        this.add(connectButton);
     }
 
 }

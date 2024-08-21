@@ -26,4 +26,13 @@ public class ViewUtil{
         return createTextField(columns, background, foreground,BorderFactory.createEmptyBorder(horizontal, horizontal, vertical, vertical));
     }
 
+    public static JButton createButton(String text, Color background, Color foreground, int horizontal, int vertical){
+        JButton button = new JButton(text);
+        button.setBackground(background);
+        button.setForeground(foreground);
+        button.setBorder(BorderFactory.createEmptyBorder(horizontal, horizontal, vertical, vertical));
+        //tirar a cor do botao ao clicar
+        return button;
+    }
+
 }
