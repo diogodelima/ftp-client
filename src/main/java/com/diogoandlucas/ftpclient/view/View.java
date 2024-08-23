@@ -18,7 +18,7 @@ public class View extends JFrame {
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        this.add(new CredentialsPanel(ftpController), BorderLayout.NORTH);
+        this.add(new CredentialsPanel(ftpController, this), BorderLayout.NORTH);
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.BACKGROUND);
         this.add(panel, BorderLayout.CENTER);

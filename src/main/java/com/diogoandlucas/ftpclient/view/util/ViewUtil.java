@@ -1,5 +1,6 @@
 package com.diogoandlucas.ftpclient.view.util;
 
+import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.view.components.RoundedBorder;
 import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedTextField;
@@ -33,6 +34,17 @@ public class ViewUtil{
         button.setHoverBackground(hover);
         //tirar a cor do botao ao clicar
         return button;
+    }
+
+    public static JDialog createDialog(JFrame frame, String text){
+        JDialog dialog = new JDialog(frame);
+        dialog.setLayout(new FlowLayout());
+        dialog.setSize(300, 150);
+        dialog.add(createLabel(text, ColorConstants.LABEL));
+        dialog.setLocationRelativeTo(frame);
+        dialog.getContentPane().setBackground(ColorConstants.BACKGROUND);
+        dialog.setVisible(true);
+        return dialog;
     }
 
 }

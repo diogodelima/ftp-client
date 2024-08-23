@@ -2,19 +2,30 @@ package com.diogoandlucas.ftpclient.view.panel;
 
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
+import com.diogoandlucas.ftpclient.exceptions.FTPConnectionAlreadyExistsException;
+import com.diogoandlucas.ftpclient.exceptions.FTPInvalidCredentialsException;
+import com.diogoandlucas.ftpclient.exceptions.FTPInvalidServerException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+
 import static com.diogoandlucas.ftpclient.view.util.ViewUtil.*;
 
 public class CredentialsPanel extends JPanel {
 
-    public CredentialsPanel (FTPController ftpController){
+    private final JTextField serverTextField, userTextField, passwordTextField;
+    private final FTPController ftpController;
+    private final JFrame frame;
+
+
+    public CredentialsPanel (FTPController ftpController, JFrame frame){
+        this.ftpController = ftpController;
+        this.frame = frame;
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
         this.setBackground(ColorConstants.BACKGROUND);
         JLabel serverLabel, userLabel, passwordLabel;
-        JTextField serverTextField, userTextField, passwordTextField;
         JButton connectButton;
         serverLabel = createLabel("Servidor:", ColorConstants.LABEL);
         userLabel = createLabel("Utilizador:", ColorConstants.LABEL);
@@ -30,6 +41,22 @@ public class CredentialsPanel extends JPanel {
         this.add(passwordLabel);
         this.add(passwordTextField);
         this.add(connectButton);
+        connectButton.addActionListener(this::buttonListener);
+    }
+
+    private void buttonListener(ActionEvent event){
+        try {
+            ftpController.connect(serverTextField.getText(), userTextField.getText(), passwordTextField.getText());
+        } catch (FTPInvalidServerException e) {
+            throw new RuntimeException(e);
+        } catch (FTPInvalidCredentialsException e) {
+            throw new RuntimeException(e);
+        } catch (FTPConnectionAlreadyExistsException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e){
+            System.out.println("testee");
+            createDialog(frame, "FTPException");
+        }
     }
 
 }
