@@ -1,12 +1,37 @@
 package com.diogoandlucas.ftpclient.view.components;
 
+import com.diogoandlucas.ftpclient.constants.ColorConstants;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class RoundedTextField extends JTextField {
 
     public RoundedTextField(int columns) {
         this.setColumns(columns);
+
+        addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+
+                if (getBorder() instanceof RoundedBorder border) {
+                    border.setColor(ColorConstants.LABEL);
+                    repaint();
+                }
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (getBorder() instanceof RoundedBorder border) {
+                    border.setColor(null);
+                    repaint();
+                }
+            }
+        });
+
     }
 
     @Override

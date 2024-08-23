@@ -9,6 +9,7 @@ import java.awt.geom.RoundRectangle2D;
 public class RoundedBorder extends AbstractBorder {
 
     private static final Color ALPHA_ZERO = new Color(0x0, true);
+    private Color color;
 
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
@@ -20,6 +21,7 @@ public class RoundedBorder extends AbstractBorder {
         corner.subtract(new Area(border));
         g2.fill(corner);
         g2.setPaint(Color.GRAY);
+        g2.setColor(color);
         g2.draw(border);
         g2.dispose();
     }
@@ -37,6 +39,10 @@ public class RoundedBorder extends AbstractBorder {
     public Insets getBorderInsets(Component c, Insets insets) {
         insets.set(4, 8, 4, 8);
         return insets;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
 }

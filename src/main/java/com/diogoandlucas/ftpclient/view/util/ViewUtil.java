@@ -23,6 +23,7 @@ public class ViewUtil{
         JTextField textField = new RoundedTextField(columns);
         textField.setBackground(background);
         textField.setForeground(foreground);
+        textField.setCaretColor(foreground);
         return textField;
     }
 
