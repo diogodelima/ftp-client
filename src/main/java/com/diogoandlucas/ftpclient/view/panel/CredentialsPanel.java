@@ -19,10 +19,10 @@ public class CredentialsPanel extends JPanel {
         serverLabel = createLabel("Servidor:", ColorConstants.LABEL);
         userLabel = createLabel("Utilizador:", ColorConstants.LABEL);
         passwordLabel = createLabel("Password:", ColorConstants.LABEL);
-        serverTextField = createTextField(12, ColorConstants.FIELD, ColorConstants.LABEL, 3, 5);
-        userTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL, 3, 5);
-        passwordTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL, 3, 5);
-        connectButton = createButton("Conectar", ColorConstants.FIELD, ColorConstants.LABEL, 5, 5);
+        serverTextField = createTextField(12, ColorConstants.FIELD, ColorConstants.LABEL);
+        userTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL);
+        passwordTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL);
+        connectButton = createButton("Conectar", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);
         this.add(serverLabel);
         this.add(serverTextField);
         this.add(userLabel);

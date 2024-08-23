@@ -15,7 +15,7 @@ public class AddressPanel extends JPanel {
         this.setBackground(ColorConstants.BACKGROUND);
 
         JLabel addressLabel = createLabel(name, ColorConstants.LABEL);
-        JTextField addressField = createTextField(0, ColorConstants.FIELD, ColorConstants.LABEL, 3, 5);
+        JTextField addressField = createTextField(0, ColorConstants.FIELD, ColorConstants.LABEL);
 
         this.add(addressLabel, BorderLayout.WEST);
         this.add(addressField, BorderLayout.CENTER);
