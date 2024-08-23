@@ -1,5 +1,6 @@
 package com.diogoandlucas.ftpclient.controller;
 
+import com.diogoandlucas.ftpclient.exceptions.FTPConnectionAlreadyExistsException;
 import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.exceptions.FTPInvalidCredentialsException;
 import com.diogoandlucas.ftpclient.exceptions.FTPInvalidServerException;
@@ -19,10 +20,13 @@ import java.util.List;
 
 public class FTPController implements AutoCloseable {
 
-private final ControlFTP controlConnection;
+private ControlFTP controlConnection;
 private DataFTP dataConnection;
 
-    public FTPController(String ip, String user, String password) throws FTPInvalidServerException, FTPInvalidCredentialsException {
+    public void connect(String ip, String user, String password) throws FTPInvalidServerException, FTPInvalidCredentialsException, FTPConnectionAlreadyExistsException {
+
+        if (controlConnection != null)
+            throw new FTPConnectionAlreadyExistsException();
 
         this.controlConnection = new ControlFTP(ip);
         ControlResponse response = controlConnection.getResponse();
