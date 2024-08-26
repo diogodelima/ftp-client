@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd43cdd7-ba02-4473-9994-f2601f5736f3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/warningIcon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/warningIcon2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedBorder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedBorder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedTextField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedTextField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +80,7 @@
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/diogo/gradle-8.9&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Gradle/gradle-8.9&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -156,14 +157,6 @@
         <item itemvalue="Gradle.ClientTest.sendMessageTest" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.387" />
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.387" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

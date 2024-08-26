@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.net.SocketException;
+import java.rmi.UnknownHostException;
 
 import static com.diogoandlucas.ftpclient.view.util.ViewUtil.*;
 
@@ -46,16 +48,25 @@ public class CredentialsPanel extends JPanel {
 
     private void buttonListener(ActionEvent event){
         try {
+            if(serverTextField.getText() == null || userTextField.getText() == null || passwordTextField.getText() == null
+                || serverTextField.getText().isEmpty() || userTextField.getText().isEmpty() || passwordTextField.getText().isEmpty())
+                throw new FTPInvalidServerException(null);
             ftpController.connect(serverTextField.getText(), userTextField.getText(), passwordTextField.getText());
         } catch (FTPInvalidServerException e) {
-            throw new RuntimeException(e);
+            createDialog(frame, "Servidor indisponível", "Erro");
         } catch (FTPInvalidCredentialsException e) {
-            throw new RuntimeException(e);
+            createDialog(frame, "<html>Credenciais incorretas!</html>", "Erro");
         } catch (FTPConnectionAlreadyExistsException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e){
-            System.out.println("testee");
-            createDialog(frame, "FTPException");
+            createDialog(frame, "<html>Já existe uma conexão para o servidor!</html>", "Erro");
+        } catch (RuntimeException e){
+
+            if(e.getCause() != null && (e.getCause() instanceof UnknownHostException || e.getCause() instanceof SocketException)) {
+                createDialog(frame, "Servidor indisponível", "Erro");
+                return;
+            }
+
+            createDialog(frame, "<html>Ocorreu um erro inesperado!<br/>Contacte o administrador.</html>", "Erro");
+            throw e;
         }
     }
 
