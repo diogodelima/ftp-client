@@ -1,4 +1,4 @@
-package com.diogoandlucas.ftpclient.model.client.item;
+package com.diogoandlucas.ftpclient.model.item;
 
 import java.time.LocalDateTime;
 

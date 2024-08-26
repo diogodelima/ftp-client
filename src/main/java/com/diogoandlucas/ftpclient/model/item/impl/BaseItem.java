@@ -1,6 +1,6 @@
-package com.diogoandlucas.ftpclient.model.client.item.impl;
+package com.diogoandlucas.ftpclient.model.item.impl;
 
-import com.diogoandlucas.ftpclient.model.client.item.Item;
+import com.diogoandlucas.ftpclient.model.item.Item;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
