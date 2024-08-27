@@ -7,9 +7,12 @@ import com.diogoandlucas.ftpclient.model.item.impl.DirectoryItem;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.view.panel.CredentialsPanel;
 import com.diogoandlucas.ftpclient.view.panel.file.FilePanel;
+import com.diogoandlucas.ftpclient.view.panel.tranfer.TransferPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +23,8 @@ public class View extends JFrame {
     public View(int width, int height){
 
         this.setSize(width, height);
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout(0, 10));
+        this.getContentPane().setBackground(ColorConstants.BACKGROUND);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         this.add(new CredentialsPanel(ftpController, this), BorderLayout.NORTH);
@@ -37,6 +41,21 @@ public class View extends JFrame {
         
         panel.add(new FilePanel("Endereço local:", items));
         panel.add(new FilePanel("Endereço remoto:", List.of()));
+
+        JPanel transferPanel = new TransferPanel();
+        transferPanel.setPreferredSize(new Dimension(width, (int) (height*0.2)));
+        this.add(transferPanel, BorderLayout.SOUTH);
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int height = (int) (View.this.getHeight()*0.2);
+                int width = View.this.getWidth();
+                transferPanel.setPreferredSize(new Dimension(width, height));
+                View.this.revalidate();
+                View.this.repaint();
+            }
+        });
 
         this.setVisible(true);
     }

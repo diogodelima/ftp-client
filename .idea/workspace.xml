@@ -5,20 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd43cdd7-ba02-4473-9994-f2601f5736f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/Item.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/BaseItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/DirectoryItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/FileItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/item/Item.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/item/impl/BaseItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/item/impl/DirectoryItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/item/impl/FileItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/AddressPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/AddressPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +82,7 @@
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/diogo/gradle-8.9&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Gradle/gradle-8.9&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -165,14 +159,6 @@
         <item itemvalue="Gradle.ClientTest.sendMessageTest" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419" />
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

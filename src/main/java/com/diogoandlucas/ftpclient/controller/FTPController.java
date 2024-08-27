@@ -9,9 +9,9 @@ import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlFTP;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponseCode;
 import com.diogoandlucas.ftpclient.model.client.ftp.data.DataFTP;
-import com.diogoandlucas.ftpclient.model.client.item.Item;
-import com.diogoandlucas.ftpclient.model.client.item.impl.DirectoryItem;
-import com.diogoandlucas.ftpclient.model.client.item.impl.FileItem;
+import com.diogoandlucas.ftpclient.model.item.Item;
+import com.diogoandlucas.ftpclient.model.item.impl.DirectoryItem;
+import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
