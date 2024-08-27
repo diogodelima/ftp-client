@@ -20,8 +20,7 @@ public class FilePanel extends JPanel {
         FileTable table = new FileTable(items);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.getViewport().setBackground(ColorConstants.BACKGROUND);
-        scrollPane.getViewport().setBorder(null);
-        scrollPane.setBorder(null);
+        scrollPane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorConstants.LABEL));
 
         this.add(scrollPane, BorderLayout.CENTER);
     }

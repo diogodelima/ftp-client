@@ -5,9 +5,12 @@ import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class FileTableModel implements TableModel {
+
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:s");
 
     private final List<Item> items;
 
@@ -57,7 +60,7 @@ public class FileTableModel implements TableModel {
             case 0 -> item.getName();
             case 1 -> item.getSize();
             case 2 -> (item instanceof FileItem) ? "Ficheiro" : "Pasta de Ficheiros";
-            case 3 -> item.getLastModify().toString();
+            case 3 -> formatter.format(item.getLastModify());
             default -> throw new IllegalStateException("Unexpected value: " + columnIndex);
         };
 

@@ -13,8 +13,11 @@ public class FileTable extends JTable {
 
         this.setBackground(ColorConstants.BACKGROUND);
         this.setForeground(ColorConstants.LABEL);
+        this.setGridColor(ColorConstants.BACKGROUND);
+        this.setBorder(BorderFactory.createEmptyBorder());
         this.getTableHeader().setBackground(ColorConstants.BACKGROUND);
         this.getTableHeader().setForeground(ColorConstants.LABEL);
+        this.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
     }
 
 }
