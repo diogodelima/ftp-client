@@ -14,6 +14,7 @@ import com.diogoandlucas.ftpclient.model.client.ftp.data.impl.DataBinaryFTP;
 import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.item.impl.DirectoryItem;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
+import com.diogoandlucas.ftpclient.model.observer.Observer;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -159,9 +160,12 @@ public class FTPController implements AutoCloseable {
         if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException("Failed to enter in ASCII mode", response);
     }
 
-    public File downloadFile (String pathname, String localPathname) throws FTPException {
+    public File downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
 
         enterInPassiveMode(true);
+
+        if (observer != null)
+            ((DataBinaryFTP) this.dataConnection).addObserver(observer);
 
         ControlResponse response = controlConnection
                 .argument(pathname)
@@ -192,6 +196,10 @@ public class FTPController implements AutoCloseable {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public File downloadFile(String pathname, String localPathname) throws FTPException {
+        return downloadFile(pathname, localPathname, null);
     }
 
 }

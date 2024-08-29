@@ -4,7 +4,6 @@ import com.diogoandlucas.ftpclient.model.client.Client;
 
 public abstract class DataFTP<T> extends Client<T, String> {
 
-
     public DataFTP(String ip, int port) {
         super(ip, port);
     }
