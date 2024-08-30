@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd43cdd7-ba02-4473-9994-f2601f5736f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedPasswordField.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataBinaryFTP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataBinaryFTP.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/observer/Observer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/observer/Observer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/item/PopupItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/item/PopupItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

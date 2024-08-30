@@ -6,11 +6,22 @@ import java.util.function.Consumer;
 
 public class PopupItem extends JMenuItem{
 
-    public PopupItem (String text, Consumer<ActionEvent> event){
+    public PopupItem (String text, Consumer<ActionEvent> eventOnClick, Consumer<PopupItem> eventOnCreate){
 
         super(text);
-        this.addActionListener(event::accept);
+        eventOnCreate.accept(this);
+        this.addActionListener(eventOnClick::accept);
+
+    }
+
+    public PopupItem (String text, Consumer<ActionEvent> eventOnClick){
+
+        this(text, eventOnClick, ignored -> {});
 
     }
 
 }
+
+
+
+

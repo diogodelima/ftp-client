@@ -2,14 +2,24 @@ package com.diogoandlucas.ftpclient.view.util;
 
 import com.diogoandlucas.ftpclient.Application;
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
-import com.diogoandlucas.ftpclient.view.components.RoundedBorder;
 import com.diogoandlucas.ftpclient.view.components.RoundedButton;
+import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
 import com.diogoandlucas.ftpclient.view.components.RoundedTextField;
+import com.diogoandlucas.ftpclient.view.popup.Popup;
+import com.diogoandlucas.ftpclient.view.popup.PopupBuilder;
+import com.diogoandlucas.ftpclient.view.popup.item.PopupItem;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static java.awt.SystemColor.text;
 
@@ -21,8 +31,12 @@ public class ViewUtil{
         return label;
     }
 
-    public static JTextField createTextField(int columns, Color background, Color foreground){
-        JTextField textField = new RoundedTextField(columns);
+    public static JTextField createTextField(int columns, Color background, Color foreground, boolean password){
+        JTextField textField;
+        if(password)
+            textField = new RoundedPasswordField(columns);
+        else
+            textField = new RoundedTextField(columns);
         textField.setBackground(background);
         textField.setForeground(foreground);
         textField.setCaretColor(foreground);
@@ -64,6 +78,56 @@ public class ViewUtil{
         dialog.setVisible(true);
 
         return dialog;
+    }
+
+    public static Popup createPopupTextField(JTextField textField){
+
+        Consumer<PopupItem> enableOnSelect = popupItem -> {
+
+            textField.addCaretListener(e -> {
+                popupItem.setEnabled(textField.getSelectedText() != null && !textField.getSelectedText().isEmpty());
+            });
+        };
+
+        Consumer<ActionEvent> copy = e -> {
+            StringSelection stringSelection = new StringSelection(textField.getSelectedText());
+
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        };
+
+        Consumer<ActionEvent> delete = e -> textField.replaceSelection("");
+
+
+        return PopupBuilder
+                .create()
+                .setComponent(textField)
+                .addItem(new PopupItem("Anular", e -> textField.setText(""), enableOnSelect))   //MELHORAR ISTOOOO
+                .addSeparator()
+                .addItem(new PopupItem("Copiar", copy, enableOnSelect))
+                .addItem(new PopupItem("Colar", e -> {
+
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    Transferable contents = clipboard.getContents(null);
+
+                    if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                        try {
+                            String text = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                            textField.replaceSelection(text);
+                        } catch (Exception ignored) {}
+                    }
+
+                }))
+                .addItem(new PopupItem("Eliminar", delete, enableOnSelect))
+                .addItem(new PopupItem("Cortar", e -> {
+
+                    copy.accept(e);
+                    delete.accept(e);
+
+                }, enableOnSelect))
+                .addSeparator()
+                .addItem(new PopupItem("Selecionar tudo", e -> textField.selectAll()))
+                .build();
     }
 
 }

@@ -5,6 +5,9 @@ import com.diogoandlucas.ftpclient.controller.FTPController;
 import com.diogoandlucas.ftpclient.exceptions.FTPConnectionAlreadyExistsException;
 import com.diogoandlucas.ftpclient.exceptions.FTPInvalidCredentialsException;
 import com.diogoandlucas.ftpclient.exceptions.FTPInvalidServerException;
+import com.diogoandlucas.ftpclient.view.popup.Popup;
+import com.diogoandlucas.ftpclient.view.popup.PopupBuilder;
+import com.diogoandlucas.ftpclient.view.popup.item.PopupItem;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,6 +21,7 @@ import static com.diogoandlucas.ftpclient.view.util.ViewUtil.*;
 public class CredentialsPanel extends JPanel {
 
     private final JTextField serverTextField, userTextField, passwordTextField;
+    //private final JPasswordField passwordField;
     private final FTPController ftpController;
     private final JFrame frame;
 
@@ -32,9 +36,9 @@ public class CredentialsPanel extends JPanel {
         serverLabel = createLabel("Servidor:", ColorConstants.LABEL);
         userLabel = createLabel("Utilizador:", ColorConstants.LABEL);
         passwordLabel = createLabel("Password:", ColorConstants.LABEL);
-        serverTextField = createTextField(12, ColorConstants.FIELD, ColorConstants.LABEL);
-        userTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL);
-        passwordTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL);
+        serverTextField = createTextField(12, ColorConstants.FIELD, ColorConstants.LABEL, false);
+        userTextField = createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL, false);
+        passwordTextField = (JPasswordField) createTextField(10, ColorConstants.FIELD, ColorConstants.LABEL, true);
         connectButton = createButton("Conectar", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);
         this.add(serverLabel);
         this.add(serverTextField);
@@ -44,12 +48,14 @@ public class CredentialsPanel extends JPanel {
         this.add(passwordTextField);
         this.add(connectButton);
         connectButton.addActionListener(this::buttonListener);
+
+        Popup popup = createPopupTextField(serverTextField);
     }
 
     private void buttonListener(ActionEvent event){
         try {
             if(serverTextField.getText() == null || userTextField.getText() == null || passwordTextField.getText() == null
-                || serverTextField.getText().isEmpty() || userTextField.getText().isEmpty() || passwordTextField.getText().isEmpty())
+                    || serverTextField.getText().isEmpty() || userTextField.getText().isEmpty() || passwordTextField.getText().isEmpty())
                 throw new FTPInvalidServerException(null);
             ftpController.connect(serverTextField.getText(), userTextField.getText(), passwordTextField.getText());
         } catch (FTPInvalidServerException e) {
