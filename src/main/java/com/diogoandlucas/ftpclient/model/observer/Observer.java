@@ -2,6 +2,6 @@ package com.diogoandlucas.ftpclient.model.observer;
 
 public interface Observer {
 
-    void update(double byteRate, long elapsedTime);
+    void update(double byteRate, long elapsedTime, int bytesRead, int totalBytesToRead);
 
 }

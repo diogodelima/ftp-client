@@ -117,6 +117,16 @@ public class FTPController implements AutoCloseable {
         if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove file", response);
     }
 
+    public int getSizeOfFile(String pathname) throws FTPException {
+
+        ControlResponse response = controlConnection
+                .argument(pathname)
+                .sendMessage(ControlCommand.SIZE);
+
+        if (response.getCode() != ControlResponseCode.CODE_213) throw new FTPException("Failed to remove file", response);
+        return Integer.parseInt(response.getMessage().trim());
+    }
+
     @Override
     public void close() throws Exception {
         this.controlConnection.close();
@@ -163,6 +173,9 @@ public class FTPController implements AutoCloseable {
     public File downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
 
         enterInPassiveMode(true);
+
+        DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) this.dataConnection;
+        dataBinaryFTP.setTotalBytesToRead(getSizeOfFile(pathname));
 
         if (observer != null)
             ((DataBinaryFTP) this.dataConnection).addObserver(observer);

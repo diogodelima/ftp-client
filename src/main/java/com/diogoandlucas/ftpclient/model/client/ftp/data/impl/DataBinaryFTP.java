@@ -11,6 +11,7 @@ import java.util.List;
 public class DataBinaryFTP extends DataFTP<byte[]> {
 
     private final List<Observer> observers = new ArrayList<>();
+    private int totalBytesToRead;
 
     public DataBinaryFTP(String ip, int port) {
         super(ip, port);
@@ -20,11 +21,15 @@ public class DataBinaryFTP extends DataFTP<byte[]> {
         this.observers.add(observer);
     }
 
-    public void notifyObservers(double byteRate, long elapsedTime) {
+    public void notifyObservers(double byteRate, long elapsedTime, int bytesRead) {
 
         for (Observer observer : this.observers)
-            observer.update(byteRate, elapsedTime);
+            observer.update(byteRate, elapsedTime, bytesRead, this.totalBytesToRead);
 
+    }
+
+    public void setTotalBytesToRead(int totalBytesToRead) {
+        this.totalBytesToRead = totalBytesToRead;
     }
 
     @Override
@@ -43,7 +48,7 @@ public class DataBinaryFTP extends DataFTP<byte[]> {
                 totalBytesRead += bytesRead;
                 long elapsedTime = System.currentTimeMillis() - startTime;
                 double byteRate = (double) totalBytesRead / (double) elapsedTime;
-                notifyObservers(byteRate, elapsedTime);
+                notifyObservers(byteRate, elapsedTime, totalBytesRead);
             }
 
         }catch(IOException e){
