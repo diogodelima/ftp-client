@@ -1,5 +1,7 @@
 package com.diogoandlucas.ftpclient.view.components;
 
+import com.diogoandlucas.ftpclient.constants.ColorConstants;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,31 +11,34 @@ public class DualColorLabel extends JLabel {
 
     public DualColorLabel(String text) {
         super(text);
+        setPercentage(0.75);
+        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
     }
 
     @Override
     public void paint(Graphics g) {
-        super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
+
+        this.setSize(100, 20);
 
         int width = getWidth();
         int height = getHeight();
 
         int maxWidth = (int) (width * percentage);
 
-        g2d.setColor(Color.RED);
+        g2d.setColor(ColorConstants.TRANSFER_BAR_PROGRESS);
         g2d.fillRect(0, 0, maxWidth, height);
 
-        g2d.setColor(Color.BLUE);
+        g2d.setColor(ColorConstants.TRANSFER_BAR_BACKGROUND);
         g2d.fillRect(maxWidth, 0, width - maxWidth, height);
 
-        g2d.setColor(Color.WHITE);
-        g2d.drawString(getText(), 10, height / 2 + g2d.getFontMetrics().getAscent() / 2);
+        super.paintComponent(g);
     }
 
     public void setPercentage(double percentage) {
         this.percentage = percentage;
+        this.setText(String.format("%.2f%%", percentage * 100));
         this.repaint();
     }
 

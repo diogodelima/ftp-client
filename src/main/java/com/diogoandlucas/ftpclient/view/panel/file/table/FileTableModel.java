@@ -4,19 +4,16 @@ import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
+import javax.swing.table.AbstractTableModel;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
-public class FileTableModel implements TableModel {
+public class FileTableModel extends AbstractTableModel {
 
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:s");
 
-    private final List<Item> items;
-
-    public FileTableModel(List<Item> items) {
-        this.items = items;
-    }
+    private List<Item> items = new ArrayList<>();
 
     @Override
     public int getRowCount() {
@@ -83,6 +80,10 @@ public class FileTableModel implements TableModel {
     @Override
     public void removeTableModelListener(TableModelListener l) {
 
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
 }

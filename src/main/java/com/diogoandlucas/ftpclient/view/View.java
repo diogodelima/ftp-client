@@ -2,12 +2,14 @@ package com.diogoandlucas.ftpclient.view;
 
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
+import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.item.impl.DirectoryItem;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.view.panel.CredentialsPanel;
 import com.diogoandlucas.ftpclient.view.panel.file.FilePanel;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.TransferPanel;
+import com.diogoandlucas.ftpclient.view.util.ViewUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,20 +29,29 @@ public class View extends JFrame {
         this.getContentPane().setBackground(ColorConstants.BACKGROUND);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        this.add(new CredentialsPanel(ftpController, this), BorderLayout.NORTH);
+        FilePanel local = new FilePanel("Endereço local:");
+        FilePanel remote = new FilePanel("Endereço remoto:");
+
+        this.add(new CredentialsPanel(ftpController, this, _ -> {
+
+            System.out.println("CALLBACK");
+
+            try {
+                List<Item> items = ftpController.getItems();
+                remote.setItems(items);
+            } catch (FTPException e) {
+                ViewUtil.createDialog(this, "Erro ao obter os ficheiros.", "Erro");
+            }
+
+
+        }), BorderLayout.NORTH);
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.BACKGROUND);
         this.add(panel, BorderLayout.CENTER);
         panel.setLayout(new GridLayout(1, 2, 10, 5));
-        
-        List<Item> items = List.of(
-                new FileItem("teste.txt", LocalDateTime.now(), 1000),
-                new FileItem("hack.sh", LocalDateTime.now().minusDays(54), 412),
-                new DirectoryItem("pasta", LocalDateTime.now().plusDays(3), 12312421)
-        );
-        
-        panel.add(new FilePanel("Endereço local:", items));
-        panel.add(new FilePanel("Endereço remoto:", List.of()));
+
+        panel.add(local);
+        panel.add(remote);
 
         JPanel transferPanel = new TransferPanel();
         transferPanel.setPreferredSize(new Dimension(width, (int) (height*0.2)));

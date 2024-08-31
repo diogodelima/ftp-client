@@ -9,5 +9,7 @@ public class ColorConstants {
     public final static Color FIELD = new Color(90,88, 88);
     public final static Color HOVER_BACKGROUND = new Color(102, 99, 99);
     public final static Color CLICK_BACKGROUND = new Color(36, 35, 35);
+    public final static Color TRANSFER_BAR_PROGRESS = new Color(18, 138, 46);
+    public final static Color TRANSFER_BAR_BACKGROUND = new Color(105, 104, 104);
 
 }

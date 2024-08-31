@@ -2,6 +2,8 @@ package com.diogoandlucas.ftpclient.view.panel.tranfer.table;
 
 import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
+import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
+import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -10,7 +12,7 @@ import java.util.List;
 
 public class TransferTableModel implements TableModel {
 
-    private final List<Item> items = new ArrayList<>();
+    private final List<TransferItem> items = new ArrayList<>();
 
     @Override
     public int getRowCount() {
@@ -19,7 +21,7 @@ public class TransferTableModel implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -29,13 +31,17 @@ public class TransferTableModel implements TableModel {
             case 0 -> "Ficheiro";
             case 1 -> "Tamanho";
             case 2 -> "Estado";
+            case 3 -> "Progresso";
             default -> throw new IllegalStateException("Unexpected value: " + columnIndex);
         };
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return String.class;
+        return switch (columnIndex) {
+            case 3 -> TransferBar.class;
+            default -> String.class;
+        };
     }
 
     @Override
@@ -46,12 +52,13 @@ public class TransferTableModel implements TableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
-        final Item item = this.items.get(rowIndex);
+        final TransferItem item = this.items.get(rowIndex);
 
         return switch (columnIndex) {
             case 0 -> item.getName();
             case 1 -> item.getSize();
-            case 2 -> "Download";  //Ajustar
+            case 2 -> item.getStatus().name();
+            case 3 -> item.getTransferBar();
             default -> throw new IllegalStateException("Unexpected value: " + columnIndex);
         };
     }
@@ -59,10 +66,10 @@ public class TransferTableModel implements TableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
-        if (!(aValue instanceof Item))
+        if (!(aValue instanceof TransferItem))
             throw new IllegalStateException("Unexpected value: " + aValue);
 
-        this.items.set(rowIndex, (Item) aValue);
+        this.items.set(rowIndex, (TransferItem) aValue);
     }
 
     @Override
@@ -75,11 +82,12 @@ public class TransferTableModel implements TableModel {
 
     }
 
-    public void addItem(Item item){
+    public void addItem(TransferItem item){
         items.add(item);
     }
 
-    public void removeItem(Item item){
+    public void removeItem(TransferItem item){
         items.remove(item);
     }
+
 }

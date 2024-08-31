@@ -56,6 +56,18 @@ public class FTPController implements AutoCloseable {
             this.dataConnection = new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
     }
 
+    public String getCurrentDirectory() throws FTPException {
+
+        enterInPassiveMode(false);
+
+        ControlResponse response = controlConnection
+                .sendMessage(ControlCommand.PWD);
+
+        if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to get the current directory", response);
+
+        return response.getMessage().substring(response.getMessage().indexOf("\"") + 1, response.getMessage().lastIndexOf("\""));
+    }
+
     public List<Item> getItems() throws FTPException {
         enterInPassiveMode(false);
         ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);

@@ -15,7 +15,6 @@ public class TransferBar extends JPanel implements Observer {
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 
         this.percentageLabel = new DualColorLabel("0%");
-        this.percentageLabel.setPercentage(50);
         this.add(percentageLabel);
 
     }
@@ -23,8 +22,8 @@ public class TransferBar extends JPanel implements Observer {
     @Override
     public void update(double byteRate, long elapsedTime, int bytesRead, int totalBytesToRead) {
 
-        double percentage = ((double) bytesRead / (double) totalBytesToRead) * 100;
-        this.percentageLabel.setText(String.format("%.2f", percentage) + "%");
+        double percentage = ((double) bytesRead / (double) totalBytesToRead);
+        this.percentageLabel.setText(String.format("%.2f", percentage * 100) + "%");
         this.percentageLabel.setPercentage(percentage);
 
     }

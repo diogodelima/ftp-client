@@ -8,8 +8,8 @@ import java.util.List;
 
 public class FileTable extends JTable {
 
-    public FileTable(List<Item> items) {
-        super(new FileTableModel(items));
+    public FileTable() {
+        super(new FileTableModel());
 
         this.setBackground(ColorConstants.BACKGROUND);
         this.setForeground(ColorConstants.LABEL);
@@ -18,6 +18,14 @@ public class FileTable extends JTable {
         this.getTableHeader().setBackground(ColorConstants.BACKGROUND);
         this.getTableHeader().setForeground(ColorConstants.LABEL);
         this.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
+    }
+
+    public void setItems(List<Item> items) {
+        FileTableModel model = (FileTableModel) this.getModel();
+        model.setItems(items);
+        model.fireTableDataChanged();
+        this.revalidate();
+        this.repaint();
     }
 
 }
