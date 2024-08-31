@@ -19,7 +19,7 @@ import static com.diogoandlucas.ftpclient.view.util.ViewUtil.*;
 public class CredentialsPanel extends JPanel {
 
     private final JTextField serverTextField, userTextField, passwordTextField;
-    //private final JPasswordField passwordField;
+    private final Popup serverPopup, userPopup, passwordPopup;
     private final FTPController ftpController;
     private final JFrame frame;
     private final Consumer<?> callbackOnConnect;
@@ -52,7 +52,9 @@ public class CredentialsPanel extends JPanel {
 
         connectButton.addActionListener(this::buttonListener);
 
-        Popup popup = createPopupTextField(serverTextField);
+        serverPopup = createPopupTextField(serverTextField);
+        userPopup = createPopupTextField(userTextField);
+        passwordPopup = createPopupTextField(passwordTextField);
     }
 
     private void buttonListener(ActionEvent event){
@@ -63,19 +65,19 @@ public class CredentialsPanel extends JPanel {
             ftpController.connect(serverTextField.getText(), userTextField.getText(), passwordTextField.getText());
             this.callbackOnConnect.accept(null);
         } catch (FTPInvalidServerException e) {
-            createDialog(frame, "Servidor indisponível", "Erro");
+            createInputDialog(frame, "Servidor indisponível", "Erro");
         } catch (FTPInvalidCredentialsException e) {
-            createDialog(frame, "<html>Credenciais incorretas!</html>", "Erro");
+            createWarningDialog(frame, "<html>Credenciais incorretas!</html>", "Erro");
         } catch (FTPConnectionAlreadyExistsException e) {
-            createDialog(frame, "<html>Já existe uma conexão para o servidor!</html>", "Erro");
+            createWarningDialog(frame, "<html>Já existe uma conexão para o servidor!</html>", "Erro");
         } catch (RuntimeException e){
 
             if(e.getCause() != null && (e.getCause() instanceof UnknownHostException || e.getCause() instanceof SocketException)) {
-                createDialog(frame, "Servidor indisponível", "Erro");
+                createWarningDialog(frame, "Servidor indisponível", "Erro");
                 return;
             }
 
-            createDialog(frame, "<html>Ocorreu um erro inesperado!<br/>Contacte o administrador.</html>", "Erro");
+            createWarningDialog(frame, "<html>Ocorreu um erro inesperado!<br/>Contacte o administrador.</html>", "Erro");
             throw e;
         }
     }
