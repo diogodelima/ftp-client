@@ -2,6 +2,7 @@ package com.diogoandlucas.ftpclient.view.util;
 
 import com.diogoandlucas.ftpclient.Application;
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
+import com.diogoandlucas.ftpclient.controller.FTPController;
 import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
 import com.diogoandlucas.ftpclient.view.components.RoundedTextField;
@@ -52,7 +53,7 @@ public class ViewUtil{
         return button;
     }
 
-    public static JDialog createDialog(JFrame frame, String text, String title){
+    public static JDialog createWarningDialog(JFrame frame, String text, String title){
         JDialog dialog = new JDialog(frame, title);
         dialog.setLayout(new BorderLayout(10, 0));
         dialog.setSize(300, 150);
@@ -80,6 +81,44 @@ public class ViewUtil{
         return dialog;
     }
 
+    public static JDialog createInputDialog(JFrame frame, String text, String title){
+        JDialog dialog = new JDialog(frame, title);
+        dialog.setLayout(new BorderLayout(10, 0));
+        dialog.setSize(300, 150);
+
+        JLabel label = createLabel(text, ColorConstants.LABEL);
+        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        dialog.add(label, BorderLayout.NORTH);
+
+        JTextField inputField = createTextField(20, ColorConstants.FIELD, ColorConstants.LABEL, false);
+        //dialog.add(inputField, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,5, 0));
+        centerPanel.setBackground(ColorConstants.BACKGROUND);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        centerPanel.add(inputField);
+
+        JButton okButton = createButton("   Ok   ", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);
+        okButton.addActionListener(event -> dialog.dispose());
+        JButton cancelarButton = createButton("   Cancelar   ", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);
+        cancelarButton.addActionListener(event -> dialog.dispose());
+
+        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,10, 10));
+        southPanel.setBackground(ColorConstants.BACKGROUND);
+        southPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        southPanel.add(okButton);
+        southPanel.add(cancelarButton);
+
+        dialog.add(centerPanel, BorderLayout.CENTER);
+        dialog.add(southPanel, BorderLayout.SOUTH);
+        dialog.setLocationRelativeTo(frame);
+        dialog.getContentPane().setBackground(ColorConstants.BACKGROUND);
+        dialog.setResizable(false);
+        dialog.setVisible(true);
+
+        return dialog;
+    }
+
+
     public static Popup createPopupTextField(JTextField textField){
 
         Consumer<PopupItem> enableOnSelect = popupItem -> {
@@ -102,7 +141,7 @@ public class ViewUtil{
         return PopupBuilder
                 .create()
                 .setComponent(textField)
-                .addItem(new PopupItem("Anular", e -> textField.setText(""), enableOnSelect))   //MELHORAR ISTOOOO
+                .addItem(new PopupItem("Eliminar tudo", e -> textField.setText("")))
                 .addSeparator()
                 .addItem(new PopupItem("Copiar", copy, enableOnSelect))
                 .addItem(new PopupItem("Colar", e -> {
@@ -127,6 +166,30 @@ public class ViewUtil{
                 }, enableOnSelect))
                 .addSeparator()
                 .addItem(new PopupItem("Selecionar tudo", e -> textField.selectAll()))
+                .build();
+    }
+
+    public static Popup createPopupServer(JScrollPane panel, FTPController controller){
+
+        return PopupBuilder
+                .create()
+                .setComponent(panel)
+                .addItem(new PopupItem("Transferir", e -> {
+
+
+                    //controller.makeDirectory()
+
+
+                }))
+                .addSeparator()
+                .addItem(new PopupItem("Criar Pasta", e -> {
+
+                }))
+                .addItem(new PopupItem("Criar Ficheiro", e -> System.out.println()))
+                .addItem(new PopupItem("Atualizar", e -> System.out.println()))
+                .addSeparator()
+                .addItem(new PopupItem("Apagar", e -> System.out.println()))
+                .addItem(new PopupItem("Mudar o nome", e -> System.out.println()))
                 .build();
     }
 

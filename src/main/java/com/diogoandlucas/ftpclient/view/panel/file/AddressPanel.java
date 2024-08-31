@@ -1,6 +1,7 @@
 package com.diogoandlucas.ftpclient.view.panel.file;
 
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
+import com.diogoandlucas.ftpclient.view.popup.Popup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,8 @@ public class AddressPanel extends JPanel {
 
         JLabel addressLabel = createLabel(name, ColorConstants.LABEL);
         JTextField addressField = createTextField(0, ColorConstants.FIELD, ColorConstants.LABEL, false);
+
+        Popup addressPopup = createPopupTextField(addressField);
 
         this.add(addressLabel, BorderLayout.WEST);
         this.add(addressField, BorderLayout.CENTER);
