@@ -11,8 +11,6 @@ import com.diogoandlucas.ftpclient.view.popup.PopupBuilder;
 import com.diogoandlucas.ftpclient.view.popup.item.PopupItem;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -21,8 +19,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.util.Objects;
 import java.util.function.Consumer;
-
-import static java.awt.SystemColor.text;
 
 public class ViewUtil{
 

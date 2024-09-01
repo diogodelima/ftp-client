@@ -23,9 +23,7 @@ public class FileTable extends JTable {
     public void setItems(List<Item> items) {
         FileTableModel model = (FileTableModel) this.getModel();
         model.setItems(items);
-        model.fireTableDataChanged();
-        this.revalidate();
-        this.repaint();
+        revalidate();
     }
 
 }

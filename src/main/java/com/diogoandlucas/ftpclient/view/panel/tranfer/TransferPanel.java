@@ -1,17 +1,10 @@
 package com.diogoandlucas.ftpclient.view.panel.tranfer;
 
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
-import com.diogoandlucas.ftpclient.model.item.Item;
-import com.diogoandlucas.ftpclient.view.panel.file.AddressPanel;
-import com.diogoandlucas.ftpclient.view.panel.file.table.FileTable;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.table.TransferTable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-
-import static com.diogoandlucas.ftpclient.view.util.ViewUtil.createLabel;
-import static com.diogoandlucas.ftpclient.view.util.ViewUtil.createTextField;
 
 public class TransferPanel extends JPanel {
 

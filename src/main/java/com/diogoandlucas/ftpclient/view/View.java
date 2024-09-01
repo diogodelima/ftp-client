@@ -4,8 +4,6 @@ import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
 import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.model.item.Item;
-import com.diogoandlucas.ftpclient.model.item.impl.DirectoryItem;
-import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.view.panel.CredentialsPanel;
 import com.diogoandlucas.ftpclient.view.panel.file.FilePanel;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.TransferPanel;
@@ -15,7 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class View extends JFrame {
@@ -34,13 +31,11 @@ public class View extends JFrame {
 
         this.add(new CredentialsPanel(ftpController, this, _ -> {
 
-            System.out.println("CALLBACK");
-
             try {
                 List<Item> items = ftpController.getItems();
                 remote.setItems(items);
             } catch (FTPException e) {
-                ViewUtil.createDialog(this, "Erro ao obter os ficheiros.", "Erro");
+                ViewUtil.createWarningDialog(this, "Erro ao obter os ficheiros.", "Erro");
             }
 
 

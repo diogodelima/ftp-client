@@ -1,7 +1,6 @@
 package com.diogoandlucas.ftpclient.model.client.ftp.control;
 
 import com.diogoandlucas.ftpclient.model.client.Client;
-import com.diogoandlucas.ftpclient.model.client.ftp.data.DataFTP;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

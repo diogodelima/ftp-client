@@ -4,7 +4,6 @@ import com.diogoandlucas.ftpclient.model.builder.Builder;
 import com.diogoandlucas.ftpclient.view.popup.item.PopupItem;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class PopupBuilder extends Builder<Popup> {
 

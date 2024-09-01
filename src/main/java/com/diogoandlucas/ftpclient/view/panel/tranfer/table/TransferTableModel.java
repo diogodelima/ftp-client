@@ -1,7 +1,5 @@
 package com.diogoandlucas.ftpclient.view.panel.tranfer.table;
 
-import com.diogoandlucas.ftpclient.model.item.Item;
-import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;
 

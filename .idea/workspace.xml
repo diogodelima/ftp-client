@@ -5,20 +5,59 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd43cdd7-ba02-4473-9994-f2601f5736f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/TransferItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/intellij-javadocs-4.0.1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/intellij-javadocs-4.0.1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/constants/ColorConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/constants/ColorConstants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPConnectionAlreadyExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPConnectionAlreadyExistsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPInvalidCredentialsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPInvalidCredentialsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPInvalidServerException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/exceptions/FTPInvalidServerException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/builder/Builder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/builder/Builder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlFTP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlFTP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlResponseCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/control/ControlResponseCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/DataFTP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/DataFTP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataAsciiFTP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataAsciiFTP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataBinaryFTP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataBinaryFTP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/Item.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/BaseItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/BaseItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/DirectoryItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/DirectoryItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/FileItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/FileItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/TransferItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/TransferItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/observer/Observer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/observer/Observer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedBorder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedBorder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedPasswordField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedPasswordField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedTextField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/RoundedTextField.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/AddressPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/AddressPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/PopupBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/PopupBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/item/PopupItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/item/PopupItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/diogoandlucas/ftpclient/model/ClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/diogoandlucas/ftpclient/model/ClientTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +102,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;diogodelima&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/diogodelima/ftp-client.git&quot;,
+    &quot;accountId&quot;: &quot;70f8d22e-1d63-4e1c-b34d-f0fbb47f29c8&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -74,35 +125,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Application.Application.executor": "Run",
-    "Gradle.Build ftp-client.executor": "Run",
-    "Gradle.ClientTest.sendMessageTest.executor": "Run",
-    "Gradle.ftp-client [:Application.main()].executor": "Run",
-    "Gradle.ftp-client [:FTPClient.main()].executor": "Run",
-    "Gradle.ftp-client [:Popup.main()].executor": "Run",
-    "Gradle.ftp-client [:com.diogoandlucas.ftpclient.Application.main()].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Gradle/gradle-8.9",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build ftp-client.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ClientTest.sendMessageTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ftp-client [:Application.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ftp-client [:FTPClient.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ftp-client [:Popup.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ftp-client [:com.diogoandlucas.ftpclient.Application.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/diogo/Desktop/Desenvolvimento/Projetos/Kotlin/restaurant&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel" />
@@ -200,8 +251,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419" />
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
@@ -235,6 +286,11 @@
       <workItem from="1725027704483" duration="5060000" />
       <workItem from="1725043410105" duration="6000" />
       <workItem from="1725108581158" duration="5624000" />
+      <workItem from="1725123742687" duration="219000" />
+      <workItem from="1725194620408" duration="190000" />
+      <workItem from="1725214536823" duration="77000" />
+      <workItem from="1725214621029" duration="91000" />
+      <workItem from="1725215319201" duration="15000" />
     </task>
     <servers />
   </component>
@@ -243,5 +299,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
