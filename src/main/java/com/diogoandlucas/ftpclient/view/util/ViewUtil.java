@@ -5,6 +5,7 @@ import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
 import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.model.item.Item;
+import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
 import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
@@ -83,7 +84,7 @@ public class ViewUtil{
         return dialog;
     }
 
-    public static JDialog createInputDialog(JFrame frame, String text, String title){
+    public static JDialog createInputDialog(JFrame frame, String text, String title, Consumer<String>response, String initialText){
         JDialog dialog = new JDialog(frame, title);
         dialog.setLayout(new BorderLayout(10, 0));
         dialog.setSize(300, 150);
@@ -93,14 +94,17 @@ public class ViewUtil{
         dialog.add(label, BorderLayout.NORTH);
 
         JTextField inputField = createTextField(20, ColorConstants.FIELD, ColorConstants.LABEL, false);
-        //dialog.add(inputField, BorderLayout.CENTER);
+        inputField.setText(initialText);
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,5, 0));
         centerPanel.setBackground(ColorConstants.BACKGROUND);
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         centerPanel.add(inputField);
 
         JButton okButton = createButton("   Ok   ", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);
-        okButton.addActionListener(event -> dialog.dispose());
+        okButton.addActionListener(event -> {
+            response.accept(inputField.getText());
+            dialog.dispose();
+        });
         JButton cancelarButton = createButton("   Cancelar   ", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);
         cancelarButton.addActionListener(event -> dialog.dispose());
 
@@ -171,7 +175,7 @@ public class ViewUtil{
                 .build();
     }
 
-    public static Popup createPopupServer(FileTable fileTable, TransferTable transferTable, FTPController controller){
+    public static Popup createPopupServer(JFrame frame, FileTable fileTable, TransferTable transferTable, FTPController controller){
 
         return PopupBuilder
                 .create()
@@ -179,19 +183,35 @@ public class ViewUtil{
                 .addItem(new PopupItem("Transferir", e -> {
 
                     Item item = fileTable.getItem(fileTable.getSelectedRow());
-                    TransferBar transferBar = new TransferBar();
-                    TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
-                    transferTable.addItem(transferItem);
-                    try {
-                        controller.downloadFile(item.getName(), "C:\\Projects\\ClientFTP\\workbench\\", transferItem);
-                    } catch (FTPException ex) {
-                        throw new RuntimeException(ex);
+                    if(item instanceof FileItem) {
+                        TransferBar transferBar = new TransferBar();
+                        TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
+                        transferTable.addItem(transferItem);
+                        try {
+                            controller.downloadFile(item.getName(), "C:\\Projects\\ClientFTP\\workbench\\", transferItem);
+                        } catch (FTPException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }else{
+                        //fazer metodo novo ftpcontroller downloadpaste
                     }
 
 
                 }))
                 .addSeparator()
                 .addItem(new PopupItem("Criar Pasta", e -> {
+                    try {
+                        createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
+                            try {
+                                controller.makeDirectory(response);
+                                fileTable.setItems(controller.getItems());
+                            } catch (FTPException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }, controller.getCurrentDirectory());
+                    } catch (FTPException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
                 }))
                 .addItem(new PopupItem("Criar Ficheiro", e -> System.out.println()))

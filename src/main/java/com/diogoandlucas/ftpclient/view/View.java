@@ -63,7 +63,7 @@ public class View extends JFrame {
             }
         });
 
-        ViewUtil.createPopupServer(remote.getTable(), transferPanel.getTable(), ftpController);
+        ViewUtil.createPopupServer(this, remote.getTable(), transferPanel.getTable(), ftpController);
 
         this.setVisible(true);
     }

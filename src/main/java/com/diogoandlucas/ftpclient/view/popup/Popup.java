@@ -10,7 +10,7 @@ public class Popup extends JPopupMenu {
         component.addMouseListener(new MouseAdapter() {
 
             public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
+                if (SwingUtilities.isRightMouseButton(e)) {
                     Popup.this.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
