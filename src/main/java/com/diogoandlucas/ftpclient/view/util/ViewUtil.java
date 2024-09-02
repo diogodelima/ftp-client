@@ -3,9 +3,15 @@ package com.diogoandlucas.ftpclient.view.util;
 import com.diogoandlucas.ftpclient.Application;
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
+import com.diogoandlucas.ftpclient.exceptions.FTPException;
+import com.diogoandlucas.ftpclient.model.item.Item;
+import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
 import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
 import com.diogoandlucas.ftpclient.view.components.RoundedTextField;
+import com.diogoandlucas.ftpclient.view.panel.file.table.FileTable;
+import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;
+import com.diogoandlucas.ftpclient.view.panel.tranfer.table.TransferTable;
 import com.diogoandlucas.ftpclient.view.popup.Popup;
 import com.diogoandlucas.ftpclient.view.popup.PopupBuilder;
 import com.diogoandlucas.ftpclient.view.popup.item.PopupItem;
@@ -165,15 +171,22 @@ public class ViewUtil{
                 .build();
     }
 
-    public static Popup createPopupServer(JScrollPane panel, FTPController controller){
+    public static Popup createPopupServer(FileTable fileTable, TransferTable transferTable, FTPController controller){
 
         return PopupBuilder
                 .create()
-                .setComponent(panel)
+                .setComponent(fileTable)
                 .addItem(new PopupItem("Transferir", e -> {
 
-
-                    //controller.makeDirectory()
+                    Item item = fileTable.getItem(fileTable.getSelectedRow());
+                    TransferBar transferBar = new TransferBar();
+                    TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
+                    transferTable.addItem(transferItem);
+                    try {
+                        controller.downloadFile(item.getName(), "C:\\Projects\\ClientFTP\\workbench\\", transferItem);
+                    } catch (FTPException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
 
                 }))

@@ -30,4 +30,7 @@ public class FilePanel extends JPanel {
         table.setItems(items);
     }
 
+    public FileTable getTable() {
+        return table;
+    }
 }

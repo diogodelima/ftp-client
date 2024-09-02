@@ -86,4 +86,8 @@ public class FileTableModel extends AbstractTableModel {
         this.items = items;
     }
 
+    public Item getItem (int rowIndex){
+        return this.items.get(rowIndex);
+    }
+
 }

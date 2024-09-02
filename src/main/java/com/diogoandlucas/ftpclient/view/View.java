@@ -48,7 +48,7 @@ public class View extends JFrame {
         panel.add(local);
         panel.add(remote);
 
-        JPanel transferPanel = new TransferPanel();
+        TransferPanel transferPanel = new TransferPanel();
         transferPanel.setPreferredSize(new Dimension(width, (int) (height*0.2)));
         this.add(transferPanel, BorderLayout.SOUTH);
 
@@ -62,6 +62,8 @@ public class View extends JFrame {
                 View.this.repaint();
             }
         });
+
+        ViewUtil.createPopupServer(remote.getTable(), transferPanel.getTable(), ftpController);
 
         this.setVisible(true);
     }

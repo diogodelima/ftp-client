@@ -65,7 +65,7 @@ public class CredentialsPanel extends JPanel {
             ftpController.connect(serverTextField.getText(), userTextField.getText(), passwordTextField.getText());
             this.callbackOnConnect.accept(null);
         } catch (FTPInvalidServerException e) {
-            createInputDialog(frame, "Servidor indisponível", "Erro");
+            createWarningDialog(frame, "Servidor indisponível", "Erro");
         } catch (FTPInvalidCredentialsException e) {
             createWarningDialog(frame, "<html>Credenciais incorretas!</html>", "Erro");
         } catch (FTPConnectionAlreadyExistsException e) {
