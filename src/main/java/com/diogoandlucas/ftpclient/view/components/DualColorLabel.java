@@ -11,16 +11,15 @@ public class DualColorLabel extends JLabel {
 
     public DualColorLabel(String text) {
         super(text);
-        setPercentage(0.75);
+        setPercentage(0);
         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        setPreferredSize(new Dimension(100, 20));
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-
-        this.setSize(100, 20);
 
         int width = getWidth();
         int height = getHeight();
@@ -38,8 +37,10 @@ public class DualColorLabel extends JLabel {
 
     public void setPercentage(double percentage) {
         this.percentage = percentage;
+        System.out.println(percentage);
         this.setText(String.format("%.2f%%", percentage * 100));
-        this.repaint();
+        repaint();
+        revalidate();
     }
 
 }

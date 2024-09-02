@@ -1,5 +1,6 @@
 package com.diogoandlucas.ftpclient.view.panel.tranfer.icon;
 
+import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.model.observer.Observer;
 import com.diogoandlucas.ftpclient.view.components.DualColorLabel;
 
@@ -13,6 +14,7 @@ public class TransferBar extends JPanel implements Observer {
     public TransferBar() {
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        setBackground(ColorConstants.BACKGROUND);
 
         this.percentageLabel = new DualColorLabel("0%");
         this.add(percentageLabel);

@@ -20,6 +20,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class FTPController implements AutoCloseable {
 
@@ -182,7 +183,7 @@ public class FTPController implements AutoCloseable {
         if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException("Failed to enter in ASCII mode", response);
     }
 
-    public File downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
+    public CompletableFuture<File> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
 
         enterInPassiveMode(true);
 
@@ -198,32 +199,38 @@ public class FTPController implements AutoCloseable {
 
         if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to download file", response);
 
-        if(pathname.contains("/")){
-            localPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
-        }else{
-            localPathname = localPathname + pathname;
-        }
+        return CompletableFuture.supplyAsync(() -> {
 
-        File file = new File(localPathname);
+            String finalLocalPathname;
 
-        try(FileOutputStream fileOutputStream = new FileOutputStream(file);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
+            if(pathname.contains("/")){
+                finalLocalPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
+            }else{
+                finalLocalPathname = localPathname + pathname;
+            }
 
-            byte[] data = (byte[]) this.dataConnection.getResponse();
-            bufferedOutputStream.write(data);
-            bufferedOutputStream.flush();
-            response = controlConnection.getResponse();
-            if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
-            closeDataConnection();
-            return file;
+            File file = new File(finalLocalPathname);
 
-        }catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            try(FileOutputStream fileOutputStream = new FileOutputStream(file);
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
+
+                byte[] data = (byte[]) this.dataConnection.getResponse();
+                bufferedOutputStream.write(data);
+                bufferedOutputStream.flush();
+                ControlResponse closeDataResponse = controlConnection.getResponse();
+                if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
+                closeDataConnection();
+                return file;
+
+            }catch (IOException | FTPException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
 
     }
 
-    public File downloadFile(String pathname, String localPathname) throws FTPException {
+    public CompletableFuture<File> downloadFile(String pathname, String localPathname) throws FTPException {
         return downloadFile(pathname, localPathname, null);
     }
 

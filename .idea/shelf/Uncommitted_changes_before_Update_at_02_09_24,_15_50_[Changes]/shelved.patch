@@ -1,0 +1,351 @@
+Index: src/main/java/com/diogoandlucas/ftpclient/Application.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.diogoandlucas.ftpclient;\r\n\r\nimport com.diogoandlucas.ftpclient.controller.FTPController;\r\nimport com.diogoandlucas.ftpclient.exceptions.FTPException;\r\nimport com.diogoandlucas.ftpclient.view.View;\r\n\r\npublic class Application {\r\n\r\n    public static void main(String[] args) throws Exception {\r\n\r\n        try(FTPController controller = new FTPController()){\r\n            controller.connect(\"eu-central-1.sftpcloud.io\", \"e9da2d0853a44056a8e4a755238768b9\", \"SGFaN0CbqCTn70mKUgXxp6CHTMNGDnB4\");\r\n            System.out.println(controller.getCurrentDirectory());\r\n        }catch(FTPException e){\r\n            System.out.println(e.getResponse());\r\n        }\r\n\r\n        new View(1280, 720);\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/diogoandlucas/ftpclient/Application.java b/src/main/java/com/diogoandlucas/ftpclient/Application.java
+--- a/src/main/java/com/diogoandlucas/ftpclient/Application.java	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/src/main/java/com/diogoandlucas/ftpclient/Application.java	(date 1725285703542)
+@@ -4,10 +4,19 @@
+ import com.diogoandlucas.ftpclient.exceptions.FTPException;
+ import com.diogoandlucas.ftpclient.view.View;
+ 
++import javax.swing.*;
++
+ public class Application {
+ 
+     public static void main(String[] args) throws Exception {
+ 
++        try {
++            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
++        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
++                 UnsupportedLookAndFeelException e) {
++            e.printStackTrace();
++        }
++
+         try(FTPController controller = new FTPController()){
+             controller.connect("eu-central-1.sftpcloud.io", "e9da2d0853a44056a8e4a755238768b9", "SGFaN0CbqCTn70mKUgXxp6CHTMNGDnB4");
+             System.out.println(controller.getCurrentDirectory());
+Index: src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.diogoandlucas.ftpclient.view.components;\r\n\r\nimport com.diogoandlucas.ftpclient.constants.ColorConstants;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\n\r\npublic class DualColorLabel extends JLabel {\r\n\r\n    private double percentage = 0.0;\r\n\r\n    public DualColorLabel(String text) {\r\n        super(text);\r\n        setPercentage(0.75);\r\n        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));\r\n    }\r\n\r\n    @Override\r\n    public void paint(Graphics g) {\r\n\r\n        Graphics2D g2d = (Graphics2D) g;\r\n\r\n        this.setSize(100, 20);\r\n\r\n        int width = getWidth();\r\n        int height = getHeight();\r\n\r\n        int maxWidth = (int) (width * percentage);\r\n\r\n        g2d.setColor(ColorConstants.TRANSFER_BAR_PROGRESS);\r\n        g2d.fillRect(0, 0, maxWidth, height);\r\n\r\n        g2d.setColor(ColorConstants.TRANSFER_BAR_BACKGROUND);\r\n        g2d.fillRect(maxWidth, 0, width - maxWidth, height);\r\n\r\n        super.paintComponent(g);\r\n    }\r\n\r\n    public void setPercentage(double percentage) {\r\n        this.percentage = percentage;\r\n        this.setText(String.format(\"%.2f%%\", percentage * 100));\r\n        this.repaint();\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java b/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java
+--- a/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java	(date 1725288426414)
+@@ -11,17 +11,16 @@
+ 
+     public DualColorLabel(String text) {
+         super(text);
+-        setPercentage(0.75);
++        setPercentage(0);
+         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
++        setPreferredSize(new Dimension(100, 20));
+     }
+ 
+     @Override
+-    public void paint(Graphics g) {
++    public void paintComponent(Graphics g) {
+ 
+         Graphics2D g2d = (Graphics2D) g;
+ 
+-        this.setSize(100, 20);
+-
+         int width = getWidth();
+         int height = getHeight();
+ 
+@@ -38,8 +37,10 @@
+ 
+     public void setPercentage(double percentage) {
+         this.percentage = percentage;
++        System.out.println(percentage);
+         this.setText(String.format("%.2f%%", percentage * 100));
+-        this.repaint();
++        repaint();
++        revalidate();
+     }
+ 
+ }
+Index: src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.diogoandlucas.ftpclient.view.util;\r\n\r\nimport com.diogoandlucas.ftpclient.Application;\r\nimport com.diogoandlucas.ftpclient.constants.ColorConstants;\r\nimport com.diogoandlucas.ftpclient.controller.FTPController;\r\nimport com.diogoandlucas.ftpclient.exceptions.FTPException;\r\nimport com.diogoandlucas.ftpclient.model.item.Item;\r\nimport com.diogoandlucas.ftpclient.model.item.impl.TransferItem;\r\nimport com.diogoandlucas.ftpclient.view.components.RoundedButton;\r\nimport com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;\r\nimport com.diogoandlucas.ftpclient.view.components.RoundedTextField;\r\nimport com.diogoandlucas.ftpclient.view.panel.file.table.FileTable;\r\nimport com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;\r\nimport com.diogoandlucas.ftpclient.view.panel.tranfer.table.TransferTable;\r\nimport com.diogoandlucas.ftpclient.view.popup.Popup;\r\nimport com.diogoandlucas.ftpclient.view.popup.PopupBuilder;\r\nimport com.diogoandlucas.ftpclient.view.popup.item.PopupItem;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\nimport java.awt.datatransfer.Clipboard;\r\nimport java.awt.datatransfer.DataFlavor;\r\nimport java.awt.datatransfer.StringSelection;\r\nimport java.awt.datatransfer.Transferable;\r\nimport java.awt.event.ActionEvent;\r\nimport java.util.Objects;\r\nimport java.util.function.Consumer;\r\n\r\npublic class ViewUtil{\r\n\r\n    public static JLabel createLabel(String text, Color foreground){\r\n        JLabel label = new JLabel(text);\r\n        label.setForeground(foreground);\r\n        return label;\r\n    }\r\n\r\n    public static JTextField createTextField(int columns, Color background, Color foreground, boolean password){\r\n        JTextField textField;\r\n        if(password)\r\n            textField = new RoundedPasswordField(columns);\r\n        else\r\n            textField = new RoundedTextField(columns);\r\n        textField.setBackground(background);\r\n        textField.setForeground(foreground);\r\n        textField.setCaretColor(foreground);\r\n        return textField;\r\n    }\r\n\r\n    public static JButton createButton(String text, Color background, Color foreground, Color hover, Color click){\r\n        RoundedButton button = new RoundedButton(text);\r\n        button.setBackground(background);\r\n        button.setForeground(foreground);\r\n        button.setClickBackground(click);\r\n        button.setHoverBackground(hover);\r\n        return button;\r\n    }\r\n\r\n    public static JDialog createWarningDialog(JFrame frame, String text, String title){\r\n        JDialog dialog = new JDialog(frame, title);\r\n        dialog.setLayout(new BorderLayout(10, 0));\r\n        dialog.setSize(300, 150);\r\n\r\n        JLabel iconLabel = new JLabel(new ImageIcon(Objects.requireNonNull(Application.class.getClassLoader().getResource(\"warningIcon.png\"))));\r\n        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));\r\n\r\n        dialog.add(iconLabel, BorderLayout.WEST);\r\n        dialog.add(createLabel(text, ColorConstants.LABEL), BorderLayout.CENTER);\r\n\r\n        JButton button = createButton(\"   Ok   \", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);\r\n        button.addActionListener(event -> dialog.dispose());\r\n\r\n        JPanel southPanel = new JPanel(new BorderLayout(10, 10));\r\n        southPanel.setBackground(ColorConstants.BACKGROUND);\r\n        southPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));\r\n        southPanel.add(button, BorderLayout.EAST);\r\n\r\n        dialog.add(southPanel, BorderLayout.SOUTH);\r\n        dialog.setLocationRelativeTo(frame);\r\n        dialog.getContentPane().setBackground(ColorConstants.BACKGROUND);\r\n        dialog.setResizable(false);\r\n        dialog.setVisible(true);\r\n\r\n        return dialog;\r\n    }\r\n\r\n    public static JDialog createInputDialog(JFrame frame, String text, String title){\r\n        JDialog dialog = new JDialog(frame, title);\r\n        dialog.setLayout(new BorderLayout(10, 0));\r\n        dialog.setSize(300, 150);\r\n\r\n        JLabel label = createLabel(text, ColorConstants.LABEL);\r\n        label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));\r\n        dialog.add(label, BorderLayout.NORTH);\r\n\r\n        JTextField inputField = createTextField(20, ColorConstants.FIELD, ColorConstants.LABEL, false);\r\n        //dialog.add(inputField, BorderLayout.CENTER);\r\n        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,5, 0));\r\n        centerPanel.setBackground(ColorConstants.BACKGROUND);\r\n        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));\r\n        centerPanel.add(inputField);\r\n\r\n        JButton okButton = createButton(\"   Ok   \", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);\r\n        okButton.addActionListener(event -> dialog.dispose());\r\n        JButton cancelarButton = createButton(\"   Cancelar   \", ColorConstants.FIELD, ColorConstants.LABEL, ColorConstants.HOVER_BACKGROUND, ColorConstants.CLICK_BACKGROUND);\r\n        cancelarButton.addActionListener(event -> dialog.dispose());\r\n\r\n        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,10, 10));\r\n        southPanel.setBackground(ColorConstants.BACKGROUND);\r\n        southPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));\r\n        southPanel.add(okButton);\r\n        southPanel.add(cancelarButton);\r\n\r\n        dialog.add(centerPanel, BorderLayout.CENTER);\r\n        dialog.add(southPanel, BorderLayout.SOUTH);\r\n        dialog.setLocationRelativeTo(frame);\r\n        dialog.getContentPane().setBackground(ColorConstants.BACKGROUND);\r\n        dialog.setResizable(false);\r\n        dialog.setVisible(true);\r\n\r\n        return dialog;\r\n    }\r\n\r\n\r\n    public static Popup createPopupTextField(JTextField textField){\r\n\r\n        Consumer<PopupItem> enableOnSelect = popupItem -> {\r\n\r\n            textField.addCaretListener(e -> {\r\n                popupItem.setEnabled(textField.getSelectedText() != null && !textField.getSelectedText().isEmpty());\r\n            });\r\n        };\r\n\r\n        Consumer<ActionEvent> copy = e -> {\r\n            StringSelection stringSelection = new StringSelection(textField.getSelectedText());\r\n\r\n            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();\r\n            clipboard.setContents(stringSelection, null);\r\n        };\r\n\r\n        Consumer<ActionEvent> delete = e -> textField.replaceSelection(\"\");\r\n\r\n\r\n        return PopupBuilder\r\n                .create()\r\n                .setComponent(textField)\r\n                .addItem(new PopupItem(\"Eliminar tudo\", e -> textField.setText(\"\")))\r\n                .addSeparator()\r\n                .addItem(new PopupItem(\"Copiar\", copy, enableOnSelect))\r\n                .addItem(new PopupItem(\"Colar\", e -> {\r\n\r\n                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();\r\n                    Transferable contents = clipboard.getContents(null);\r\n\r\n                    if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {\r\n                        try {\r\n                            String text = (String) contents.getTransferData(DataFlavor.stringFlavor);\r\n                            textField.replaceSelection(text);\r\n                        } catch (Exception ignored) {}\r\n                    }\r\n\r\n                }))\r\n                .addItem(new PopupItem(\"Eliminar\", delete, enableOnSelect))\r\n                .addItem(new PopupItem(\"Cortar\", e -> {\r\n\r\n                    copy.accept(e);\r\n                    delete.accept(e);\r\n\r\n                }, enableOnSelect))\r\n                .addSeparator()\r\n                .addItem(new PopupItem(\"Selecionar tudo\", e -> textField.selectAll()))\r\n                .build();\r\n    }\r\n\r\n    public static Popup createPopupServer(FileTable fileTable, TransferTable transferTable, FTPController controller){\r\n\r\n        return PopupBuilder\r\n                .create()\r\n                .setComponent(fileTable)\r\n                .addItem(new PopupItem(\"Transferir\", e -> {\r\n\r\n                    Item item = fileTable.getItem(fileTable.getSelectedRow());\r\n                    TransferBar transferBar = new TransferBar();\r\n                    TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);\r\n                    transferTable.addItem(transferItem);\r\n                    try {\r\n                        controller.downloadFile(item.getName(), \"C:\\\\Projects\\\\ClientFTP\\\\workbench\\\\\", transferItem);\r\n                    } catch (FTPException ex) {\r\n                        throw new RuntimeException(ex);\r\n                    }\r\n\r\n\r\n                }))\r\n                .addSeparator()\r\n                .addItem(new PopupItem(\"Criar Pasta\", e -> {\r\n\r\n                }))\r\n                .addItem(new PopupItem(\"Criar Ficheiro\", e -> System.out.println()))\r\n                .addItem(new PopupItem(\"Atualizar\", e -> System.out.println()))\r\n                .addSeparator()\r\n                .addItem(new PopupItem(\"Apagar\", e -> System.out.println()))\r\n                .addItem(new PopupItem(\"Mudar o nome\", e -> System.out.println()))\r\n                .build();\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+diff --git a/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java b/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java
+--- a/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java	(date 1725287994561)
+@@ -17,6 +17,7 @@
+ import com.diogoandlucas.ftpclient.view.popup.item.PopupItem;
+ 
+ import javax.swing.*;
++import javax.swing.table.TableCellRenderer;
+ import java.awt.*;
+ import java.awt.datatransfer.Clipboard;
+ import java.awt.datatransfer.DataFlavor;
+@@ -180,10 +181,12 @@
+ 
+                     Item item = fileTable.getItem(fileTable.getSelectedRow());
+                     TransferBar transferBar = new TransferBar();
++                    transferTable.getColumnModel().getColumn(3).setCellRenderer((_, _, _, _, _, _) -> transferBar);
+                     TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
+                     transferTable.addItem(transferItem);
+                     try {
+-                        controller.downloadFile(item.getName(), "C:\\Projects\\ClientFTP\\workbench\\", transferItem);
++                        controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
++                                .thenAccept(file -> transferTable.removeItem(transferItem));
+                     } catch (FTPException ex) {
+                         throw new RuntimeException(ex);
+                     }
+Index: src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.diogoandlucas.ftpclient.view.popup;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.event.MouseAdapter;\r\nimport java.awt.event.MouseEvent;\r\n\r\npublic class Popup extends JPopupMenu {\r\n\r\n    public void setPanel(JComponent component){\r\n        component.addMouseListener(new MouseAdapter() {\r\n\r\n            public void mouseReleased(MouseEvent e) {\r\n                if (e.isPopupTrigger()) {\r\n                    Popup.this.show(e.getComponent(), e.getX(), e.getY());\r\n                }\r\n            }\r\n\r\n        });\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java b/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java
+--- a/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java	(date 1725286108441)
+@@ -10,7 +10,7 @@
+         component.addMouseListener(new MouseAdapter() {
+ 
+             public void mouseReleased(MouseEvent e) {
+-                if (e.isPopupTrigger()) {
++                if (SwingUtilities.isRightMouseButton(e)) {
+                     Popup.this.show(e.getComponent(), e.getX(), e.getY());
+                 }
+             }
+Index: src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.diogoandlucas.ftpclient.view.panel.tranfer.icon;\r\n\r\nimport com.diogoandlucas.ftpclient.model.observer.Observer;\r\nimport com.diogoandlucas.ftpclient.view.components.DualColorLabel;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\n\r\npublic class TransferBar extends JPanel implements Observer {\r\n\r\n    private final DualColorLabel percentageLabel;\r\n\r\n    public TransferBar() {\r\n\r\n        setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));\r\n\r\n        this.percentageLabel = new DualColorLabel(\"0%\");\r\n        this.add(percentageLabel);\r\n\r\n    }\r\n\r\n    @Override\r\n    public void update(double byteRate, long elapsedTime, int bytesRead, int totalBytesToRead) {\r\n\r\n        double percentage = ((double) bytesRead / (double) totalBytesToRead);\r\n        this.percentageLabel.setText(String.format(\"%.2f\", percentage * 100) + \"%\");\r\n        this.percentageLabel.setPercentage(percentage);\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java b/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java
+--- a/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java	(date 1725288391064)
+@@ -1,5 +1,6 @@
+ package com.diogoandlucas.ftpclient.view.panel.tranfer.icon;
+ 
++import com.diogoandlucas.ftpclient.constants.ColorConstants;
+ import com.diogoandlucas.ftpclient.model.observer.Observer;
+ import com.diogoandlucas.ftpclient.view.components.DualColorLabel;
+ 
+@@ -13,6 +14,7 @@
+     public TransferBar() {
+ 
+         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
++        setBackground(ColorConstants.BACKGROUND);
+ 
+         this.percentageLabel = new DualColorLabel("0%");
+         this.add(percentageLabel);
+Index: src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.diogoandlucas.ftpclient.controller;\r\n\r\nimport com.diogoandlucas.ftpclient.exceptions.FTPConnectionAlreadyExistsException;\r\nimport com.diogoandlucas.ftpclient.exceptions.FTPException;\r\nimport com.diogoandlucas.ftpclient.exceptions.FTPInvalidCredentialsException;\r\nimport com.diogoandlucas.ftpclient.exceptions.FTPInvalidServerException;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.control.ControlCommand;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.control.ControlFTP;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponseCode;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.data.DataFTP;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.data.impl.DataAsciiFTP;\r\nimport com.diogoandlucas.ftpclient.model.client.ftp.data.impl.DataBinaryFTP;\r\nimport com.diogoandlucas.ftpclient.model.item.Item;\r\nimport com.diogoandlucas.ftpclient.model.item.impl.DirectoryItem;\r\nimport com.diogoandlucas.ftpclient.model.item.impl.FileItem;\r\nimport com.diogoandlucas.ftpclient.model.observer.Observer;\r\n\r\nimport java.io.*;\r\nimport java.time.LocalDateTime;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class FTPController implements AutoCloseable {\r\n\r\n    private ControlFTP controlConnection;\r\n    private DataFTP dataConnection;\r\n\r\n    public void connect(String ip, String user, String password) throws FTPInvalidServerException, FTPInvalidCredentialsException, FTPConnectionAlreadyExistsException {\r\n\r\n        if (controlConnection != null)\r\n            throw new FTPConnectionAlreadyExistsException();\r\n\r\n        this.controlConnection = new ControlFTP(ip);\r\n        ControlResponse response = controlConnection.getResponse();\r\n        if(response.getCode() != ControlResponseCode.CODE_220) throw new FTPInvalidServerException(response);\r\n\r\n        response = controlConnection\r\n                .argument(user)\r\n                .sendMessage(ControlCommand.USER);\r\n        if(response.getCode() != ControlResponseCode.CODE_331) throw new FTPInvalidCredentialsException(response);\r\n\r\n        response = controlConnection\r\n                .argument(password)\r\n                .sendMessage(ControlCommand.PASS);\r\n        if(response.getCode() != ControlResponseCode.CODE_230) throw new FTPInvalidCredentialsException(response);\r\n    }\r\n\r\n    public void enterInPassiveMode(boolean binary) throws FTPException {\r\n        ControlResponse response = controlConnection.sendMessage(ControlCommand.PASV);\r\n        if(response.getCode() != ControlResponseCode.CODE_227) throw new FTPException(\"Fail entering passive mode\", response);\r\n        String[] ipAndPort = controlConnection.getIpAndPort(response.getMessage());\r\n        if(binary)\r\n            this.dataConnection = new DataBinaryFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));\r\n        else\r\n            this.dataConnection = new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));\r\n    }\r\n\r\n    public String getCurrentDirectory() throws FTPException {\r\n\r\n        enterInPassiveMode(false);\r\n\r\n        ControlResponse response = controlConnection\r\n                .sendMessage(ControlCommand.PWD);\r\n\r\n        if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException(\"Failed to get the current directory\", response);\r\n\r\n        return response.getMessage().substring(response.getMessage().indexOf(\"\\\"\") + 1, response.getMessage().lastIndexOf(\"\\\"\"));\r\n    }\r\n\r\n    public List<Item> getItems() throws FTPException {\r\n        enterInPassiveMode(false);\r\n        ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);\r\n        if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException(\"Failed to open data connection\", response);\r\n        String data = (String) dataConnection.getResponse();\r\n        response = controlConnection.getResponse();\r\n        if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException(\"Failed to close data connection\", response);\r\n        closeDataConnection();\r\n\r\n        String[] singleDataArray = data.split(\"\\n\");\r\n        List<Item> items = new ArrayList<>();\r\n\r\n        for (String singleData : singleDataArray) {\r\n\r\n            String[] information = singleData.split(\";\");\r\n            String type = information[0].substring(information[0].indexOf(\"=\") + 1);\r\n            long size = Long.parseLong(information[1].substring(information[1].indexOf(\"=\") + 1));\r\n            LocalDateTime lastModify = getLocalDateTime(information);\r\n            String name = information[3].trim();\r\n\r\n            Item item;\r\n\r\n            if (type.equalsIgnoreCase(\"dir\"))\r\n                item = new DirectoryItem(name, lastModify, size);\r\n            else if (type.equalsIgnoreCase(\"file\"))\r\n                item = new FileItem(name, lastModify, size);\r\n            else throw new IllegalArgumentException(\"Invalid type \" + type);\r\n\r\n            items.add(item);\r\n        }\r\n\r\n        return items;\r\n    }\r\n\r\n    public void makeDirectory(String pathname) throws FTPException {\r\n\r\n        ControlResponse response = controlConnection\r\n                .argument(pathname)\r\n                .sendMessage(ControlCommand.MKD);\r\n\r\n        if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException(\"Failed to create the directory\", response);\r\n    }\r\n\r\n    public void removeDirectory(String pathname) throws FTPException {\r\n\r\n        ControlResponse response = controlConnection\r\n                .argument(pathname)\r\n                .sendMessage(ControlCommand.RMD);\r\n\r\n        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException(\"Failed to remove directory\", response);\r\n    }\r\n\r\n    public void removeFile(String pathname) throws FTPException {\r\n\r\n        ControlResponse response = controlConnection\r\n                .argument(pathname)\r\n                .sendMessage(ControlCommand.DELE);\r\n\r\n        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException(\"Failed to remove file\", response);\r\n    }\r\n\r\n    public int getSizeOfFile(String pathname) throws FTPException {\r\n\r\n        ControlResponse response = controlConnection\r\n                .argument(pathname)\r\n                .sendMessage(ControlCommand.SIZE);\r\n\r\n        if (response.getCode() != ControlResponseCode.CODE_213) throw new FTPException(\"Failed to remove file\", response);\r\n        return Integer.parseInt(response.getMessage().trim());\r\n    }\r\n\r\n    @Override\r\n    public void close() throws Exception {\r\n        this.controlConnection.close();\r\n        closeDataConnection();\r\n    }\r\n\r\n    private void closeDataConnection() {\r\n        if(dataConnection != null) {\r\n            try {\r\n                dataConnection.close();\r\n            } catch (Exception e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n        }\r\n    }\r\n\r\n    private static LocalDateTime getLocalDateTime(String[] information) {\r\n        String dateFormatted = information[2].substring(information[2].indexOf(\"=\") + 1);\r\n        int year = Integer.parseInt(dateFormatted.substring(0, 4));\r\n        int month = Integer.parseInt(dateFormatted.substring(4, 6));\r\n        int day = Integer.parseInt(dateFormatted.substring(6, 8));\r\n        int hour = Integer.parseInt(dateFormatted.substring(8, 10));\r\n        int minute = Integer.parseInt(dateFormatted.substring(10, 12));\r\n        int second = Integer.parseInt(dateFormatted.substring(12, 14));\r\n        return LocalDateTime.of(year, month, day, hour, minute, second);\r\n    }\r\n\r\n    public void setBinaryMode() throws FTPException {\r\n\r\n        ControlResponse response = controlConnection\r\n                .argument(\"I\")\r\n                .sendMessage(ControlCommand.TYPE);\r\n\r\n        if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException(\"Failed to enter in Binary mode\", response);\r\n    }\r\n\r\n    public void setAsciiMode() throws FTPException {\r\n        ControlResponse response = controlConnection\r\n                .argument(\"A\")\r\n                .sendMessage(ControlCommand.TYPE);\r\n        if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException(\"Failed to enter in ASCII mode\", response);\r\n    }\r\n\r\n    public File downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {\r\n\r\n        enterInPassiveMode(true);\r\n\r\n        DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) this.dataConnection;\r\n        dataBinaryFTP.setTotalBytesToRead(getSizeOfFile(pathname));\r\n\r\n        if (observer != null)\r\n            ((DataBinaryFTP) this.dataConnection).addObserver(observer);\r\n\r\n        ControlResponse response = controlConnection\r\n                .argument(pathname)\r\n                .sendMessage(ControlCommand.RETR);\r\n\r\n        if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException(\"Failed to download file\", response);\r\n\r\n        if(pathname.contains(\"/\")){\r\n            localPathname = localPathname + pathname.substring(pathname.lastIndexOf(\"/\"));\r\n        }else{\r\n            localPathname = localPathname + pathname;\r\n        }\r\n\r\n        File file = new File(localPathname);\r\n\r\n        try(FileOutputStream fileOutputStream = new FileOutputStream(file);\r\n            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){\r\n\r\n            byte[] data = (byte[]) this.dataConnection.getResponse();\r\n            bufferedOutputStream.write(data);\r\n            bufferedOutputStream.flush();\r\n            response = controlConnection.getResponse();\r\n            if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException(\"Failed to close data connection\", response);\r\n            closeDataConnection();\r\n            return file;\r\n\r\n        }catch (IOException e) {\r\n            throw new RuntimeException(e);\r\n        }\r\n\r\n    }\r\n\r\n    public File downloadFile(String pathname, String localPathname) throws FTPException {\r\n        return downloadFile(pathname, localPathname, null);\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+diff --git a/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java b/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java
+--- a/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java	(date 1725285423847)
+@@ -20,6 +20,7 @@
+ import java.time.LocalDateTime;
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.concurrent.CompletableFuture;
+ 
+ public class FTPController implements AutoCloseable {
+ 
+@@ -182,7 +183,7 @@
+         if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException("Failed to enter in ASCII mode", response);
+     }
+ 
+-    public File downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
++    public CompletableFuture<File> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
+ 
+         enterInPassiveMode(true);
+ 
+@@ -198,32 +199,38 @@
+ 
+         if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to download file", response);
+ 
+-        if(pathname.contains("/")){
+-            localPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
+-        }else{
+-            localPathname = localPathname + pathname;
+-        }
++        return CompletableFuture.supplyAsync(() -> {
++
++            String finalLocalPathname;
++
++            if(pathname.contains("/")){
++                finalLocalPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
++            }else{
++                finalLocalPathname = localPathname + pathname;
++            }
+ 
+-        File file = new File(localPathname);
++            File file = new File(finalLocalPathname);
+ 
+-        try(FileOutputStream fileOutputStream = new FileOutputStream(file);
+-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
++            try(FileOutputStream fileOutputStream = new FileOutputStream(file);
++                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
+ 
+-            byte[] data = (byte[]) this.dataConnection.getResponse();
+-            bufferedOutputStream.write(data);
+-            bufferedOutputStream.flush();
+-            response = controlConnection.getResponse();
+-            if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
+-            closeDataConnection();
+-            return file;
++                byte[] data = (byte[]) this.dataConnection.getResponse();
++                bufferedOutputStream.write(data);
++                bufferedOutputStream.flush();
++                ControlResponse closeDataResponse = controlConnection.getResponse();
++                if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
++                closeDataConnection();
++                return file;
+ 
+-        }catch (IOException e) {
+-            throw new RuntimeException(e);
+-        }
++            }catch (IOException | FTPException e) {
++                throw new RuntimeException(e);
++            }
+ 
++        });
++
+     }
+ 
+-    public File downloadFile(String pathname, String localPathname) throws FTPException {
++    public CompletableFuture<File> downloadFile(String pathname, String localPathname) throws FTPException {
+         return downloadFile(pathname, localPathname, null);
+     }
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"cd43cdd7-ba02-4473-9994-f2601f5736f3\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/gradle.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/gradle.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTable.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTable.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTableModel.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTableModel.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <task path=\"$PROJECT_DIR$\">\r\n          <activation />\r\n        </task>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"ftp-client\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"JUnit5 Test Class\" />\r\n        <option value=\"Enum\" />\r\n        <option value=\"Interface\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;diogodelima&quot;\n  }\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/diogodelima/ftp-client.git&quot;,\n    &quot;accountId&quot;: &quot;70f8d22e-1d63-4e1c-b34d-f0fbb47f29c8&quot;\n  }\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 2\n}</component>\r\n  <component name=\"ProjectId\" id=\"2k40VAjx3ypdyrVRnmaWLyVcBCp\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"ASKED_ADD_EXTERNAL_FILES\": \"true\",\n    \"Application.Application (1).executor\": \"Run\",\n    \"Application.Application.executor\": \"Run\",\n    \"Gradle.Build ftp-client.executor\": \"Run\",\n    \"Gradle.ClientTest.sendMessageTest.executor\": \"Run\",\n    \"Gradle.ftp-client [:Application.main()].executor\": \"Run\",\n    \"Gradle.ftp-client [:FTPClient.main()].executor\": \"Run\",\n    \"Gradle.ftp-client [:Popup.main()].executor\": \"Run\",\n    \"Gradle.ftp-client [:com.diogoandlucas.ftpclient.Application.main()].executor\": \"Run\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary\": \"JUnit5\",\n    \"com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5\": \"\",\n    \"git-widget-placeholder\": \"master\",\n    \"kotlin-language-version-configured\": \"true\",\n    \"last_opened_file_path\": \"C:/Gradle/gradle-8.9\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"project.structure.last.edited\": \"Project\",\n    \"project.structure.proportion\": \"0.0\",\n    \"project.structure.side.proportion\": \"0.0\",\n    \"settings.editor.selected.configurable\": \"reference.settingsdialog.project.gradle\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel\" />\r\n    </key>\r\n    <key name=\"CreateTestDialog.Recents.Supers\">\r\n      <recent name=\"\" />\r\n    </key>\r\n    <key name=\"CreateTestDialog.RecentsKey\">\r\n      <recent name=\"com.diogoandlucas.ftpclient.model\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Application (1)\">\r\n    <configuration name=\"Application (1)\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.diogoandlucas.ftpclient.Application\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.diogoandlucas.ftpclient.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Application\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.diogoandlucas.ftpclient.Application\" />\r\n      <module name=\"ftp-client\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.diogoandlucas.ftpclient.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <extension name=\"net.ashald.envfile\">\r\n        <option name=\"IS_ENABLED\" value=\"false\" />\r\n        <option name=\"IS_SUBST\" value=\"false\" />\r\n        <option name=\"IS_PATH_MACRO_SUPPORTED\" value=\"false\" />\r\n        <option name=\"IS_IGNORE_MISSING_FILES\" value=\"false\" />\r\n        <option name=\"IS_ENABLE_EXPERIMENTAL_INTEGRATIONS\" value=\"false\" />\r\n        <ENTRIES>\r\n          <ENTRY IS_ENABLED=\"true\" PARSER=\"runconfig\" IS_EXECUTABLE=\"false\" />\r\n        </ENTRIES>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Popup\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.diogoandlucas.ftpclient.view.popup.Popup\" />\r\n      <module name=\"com.diogoandlucas.ftp-client.main\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"com.diogoandlucas.ftpclient.view.popup.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"ClientTest.sendMessageTest\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\r\n      <ExternalSystemSettings>\r\n        <option name=\"executionName\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\r\n        <option name=\"scriptParameters\" value=\"\" />\r\n        <option name=\"taskDescriptions\">\r\n          <list />\r\n        </option>\r\n        <option name=\"taskNames\">\r\n          <list>\r\n            <option value=\":test\" />\r\n            <option value=\"--tests\" />\r\n            <option value=\"&quot;com.diogoandlucas.ftpclient.model.ClientTest.sendMessageTest&quot;\" />\r\n          </list>\r\n        </option>\r\n        <option name=\"vmOptions\" />\r\n      </ExternalSystemSettings>\r\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\r\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\r\n      <DebugAllEnabled>false</DebugAllEnabled>\r\n      <RunAsTest>true</RunAsTest>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Application (1)\" />\r\n        <item itemvalue=\"Application.Application\" />\r\n        <item itemvalue=\"Application.Popup\" />\r\n        <item itemvalue=\"Gradle.ClientTest.sendMessageTest\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"cd43cdd7-ba02-4473-9994-f2601f5736f3\" name=\"Changes\" comment=\"\" />\r\n      <created>1722527566713</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1722527566713</updated>\r\n      <workItem from=\"1722527567790\" duration=\"128000\" />\r\n      <workItem from=\"1722702098739\" duration=\"6903000\" />\r\n      <workItem from=\"1722760626196\" duration=\"671000\" />\r\n      <workItem from=\"1722774660432\" duration=\"13000\" />\r\n      <workItem from=\"1722780326795\" duration=\"3015000\" />\r\n      <workItem from=\"1722795263147\" duration=\"16000\" />\r\n      <workItem from=\"1722880571230\" duration=\"2053000\" />\r\n      <workItem from=\"1722883902019\" duration=\"5000\" />\r\n      <workItem from=\"1722930731618\" duration=\"73000\" />\r\n      <workItem from=\"1724072443986\" duration=\"388000\" />\r\n      <workItem from=\"1724084150828\" duration=\"136000\" />\r\n      <workItem from=\"1724160390618\" duration=\"2258000\" />\r\n      <workItem from=\"1724261359385\" duration=\"79000\" />\r\n      <workItem from=\"1724261447315\" duration=\"252000\" />\r\n      <workItem from=\"1724400284375\" duration=\"6822000\" />\r\n      <workItem from=\"1724411121432\" duration=\"14000\" />\r\n      <workItem from=\"1724680450375\" duration=\"197000\" />\r\n      <workItem from=\"1724937613669\" duration=\"3416000\" />\r\n      <workItem from=\"1725021279680\" duration=\"47000\" />\r\n      <workItem from=\"1725027704483\" duration=\"5060000\" />\r\n      <workItem from=\"1725043410105\" duration=\"6000\" />\r\n      <workItem from=\"1725108581158\" duration=\"5624000\" />\r\n      <workItem from=\"1725123742687\" duration=\"219000\" />\r\n      <workItem from=\"1725194620408\" duration=\"190000\" />\r\n      <workItem from=\"1725214536823\" duration=\"77000\" />\r\n      <workItem from=\"1725214621029\" duration=\"91000\" />\r\n      <workItem from=\"1725215319201\" duration=\"15000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"ADD_EXTERNAL_FILES_SILENTLY\" value=\"true\" />\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/.idea/workspace.xml	(date 1725288326077)
+@@ -6,14 +6,13 @@
+   <component name="ChangeListManager">
+     <list default="true" id="cd43cdd7-ba02-4473-9994-f2601f5736f3" name="Changes" comment="">
+       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/View.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/CredentialsPanel.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/FilePanel.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTable.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/file/table/FileTableModel.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/TransferPanel.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/table/TransferTable.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/Application.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/components/DualColorLabel.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/panel/tranfer/icon/TransferBar.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/popup/Popup.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -52,6 +51,7 @@
+         <option value="JUnit5 Test Class" />
+         <option value="Enum" />
+         <option value="Interface" />
++        <option value="Kotlin Class" />
+         <option value="Class" />
+       </list>
+     </option>
+@@ -99,7 +99,7 @@
+     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+     "git-widget-placeholder": "master",
+     "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "C:/Gradle/gradle-8.9",
++    "last_opened_file_path": "/home/diogo/gradle-8.9",
+     "node.js.detected.package.eslint": "true",
+     "node.js.detected.package.tslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+@@ -131,6 +131,16 @@
+           <option name="PATTERN" value="com.diogoandlucas.ftpclient.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
++      </extension>
++      <extension name="net.ashald.envfile">
++        <option name="IS_ENABLED" value="false" />
++        <option name="IS_SUBST" value="false" />
++        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
++        <option name="IS_IGNORE_MISSING_FILES" value="false" />
++        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
++        <ENTRIES>
++          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
++        </ENTRIES>
+       </extension>
+       <method v="2">
+         <option name="Make" enabled="true" />
+@@ -196,6 +206,12 @@
+       <RunAsTest>true</RunAsTest>
+       <method v="2" />
+     </configuration>
++    <list>
++      <item itemvalue="Application.Application (1)" />
++      <item itemvalue="Application.Application" />
++      <item itemvalue="Application.Popup" />
++      <item itemvalue="Gradle.ClientTest.sendMessageTest" />
++    </list>
+     <recent_temporary>
+       <list>
+         <item itemvalue="Application.Application (1)" />
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"FrameworkDetectionExcludesConfiguration\">\r\n    <file type=\"web\" url=\"file://$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_22\" project-jdk-name=\"22\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/.idea/misc.xml	(date 1725284220681)
+@@ -4,7 +4,7 @@
+   <component name="FrameworkDetectionExcludesConfiguration">
+     <file type="web" url="file://$PROJECT_DIR$" />
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" project-jdk-name="22" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="22" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"distributionType\" value=\"LOCAL\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleHome\" value=\"$PROJECT_DIR$/../../../Gradle/gradle-8.9\" />\r\n        <option name=\"gradleJvm\" value=\"22\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision 9388ad04a18517990445dba88780ec32e7c5fc15)
++++ b/.idea/gradle.xml	(date 1725284214211)
+@@ -6,7 +6,7 @@
+       <GradleProjectSettings>
+         <option name="distributionType" value="LOCAL" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="gradleHome" value="$PROJECT_DIR$/../../../Gradle/gradle-8.9" />
++        <option name="gradleHome" value="$USER_HOME$/gradle-8.9" />
+         <option name="gradleJvm" value="22" />
+         <option name="modules">
+           <set>

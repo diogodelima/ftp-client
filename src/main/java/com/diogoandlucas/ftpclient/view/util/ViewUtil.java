@@ -5,7 +5,6 @@ import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
 import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.model.item.Item;
-import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
 import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
@@ -183,23 +182,22 @@ public class ViewUtil{
                 .addItem(new PopupItem("Transferir", e -> {
 
                     Item item = fileTable.getItem(fileTable.getSelectedRow());
-                    if(item instanceof FileItem) {
-                        TransferBar transferBar = new TransferBar();
-                        TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
-                        transferTable.addItem(transferItem);
-                        try {
-                            controller.downloadFile(item.getName(), "C:\\Projects\\ClientFTP\\workbench\\", transferItem);
-                        } catch (FTPException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }else{
-                        //fazer metodo novo ftpcontroller downloadpaste
+                    TransferBar transferBar = new TransferBar();
+                    transferTable.getColumnModel().getColumn(3).setCellRenderer((_, _, _, _, _, _) -> transferBar);
+                    TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
+                    transferTable.addItem(transferItem);
+                    try {
+                        controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
+                                .thenAccept(file -> transferTable.removeItem(transferItem));
+                    } catch (FTPException ex) {
+                        throw new RuntimeException(ex);
                     }
 
 
                 }))
                 .addSeparator()
                 .addItem(new PopupItem("Criar Pasta", e -> {
+
                     try {
                         createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
                             try {
