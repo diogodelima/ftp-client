@@ -112,6 +112,38 @@ public class FTPController implements AutoCloseable {
         if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to create the directory", response);
     }
 
+    public void makeFile(String filename) throws FTPException {
+
+        enterInPassiveMode(false);
+        ControlResponse response = controlConnection
+                .argument(filename)
+                .sendMessage(ControlCommand.STOR);
+
+        System.out.println(response);
+
+        if (response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to create the file", response);
+
+        closeDataConnection();
+        response = controlConnection.getResponse();
+
+        if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to create the file", response);
+    }
+
+    public void renameItem(String from, String to) throws FTPException {
+
+        ControlResponse response = controlConnection
+                .argument(from)
+                .sendMessage(ControlCommand.RNFR);
+
+        if (response.getCode() != ControlResponseCode.CODE_350) throw new FTPException("Failed to rename the file", response);
+
+        response = controlConnection
+                .argument(to)
+                .sendMessage(ControlCommand.RNTO);
+
+        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to rename the file", response);
+    }
+
     public void removeDirectory(String pathname) throws FTPException {
 
         ControlResponse response = controlConnection
