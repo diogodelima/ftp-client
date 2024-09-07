@@ -7,13 +7,15 @@ import java.awt.*;
 
 public class DualColorLabel extends JLabel {
 
-    private double percentage = 0.0;
+    private double percentage;
 
     public DualColorLabel(String text) {
         super(text);
         setPercentage(0);
-        setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        setPreferredSize(new Dimension(100, 20));
+        setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 30));
+        setForeground(ColorConstants.LABEL);
+        setHorizontalAlignment(JLabel.CENTER);
+        setVerticalAlignment(JLabel.CENTER);
     }
 
     @Override
@@ -37,10 +39,8 @@ public class DualColorLabel extends JLabel {
 
     public void setPercentage(double percentage) {
         this.percentage = percentage;
-        System.out.println(percentage);
         this.setText(String.format("%.2f%%", percentage * 100));
         repaint();
-        revalidate();
     }
 
 }

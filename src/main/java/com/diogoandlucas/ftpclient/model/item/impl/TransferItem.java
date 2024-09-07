@@ -3,15 +3,19 @@ package com.diogoandlucas.ftpclient.model.item.impl;
 import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.observer.Observer;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;
+import com.diogoandlucas.ftpclient.view.panel.tranfer.table.TransferTable;
+
+import javax.swing.*;
 
 public class TransferItem extends BaseItem implements Observer {
 
-    private final TransferBar transferBar;
+    private final TransferBar transferBar = new TransferBar();
+    private final TransferTable transferTable;
     private final Status status;
 
-    public TransferItem(Item item, TransferBar transferBar, Status status) {
+    public TransferItem(Item item, TransferTable transferTable, Status status) {
         super(item.getName(), item.getLastModify(), item.getSize());
-        this.transferBar = transferBar;
+        this.transferTable = transferTable;
         this.status = status;
     }
 
@@ -25,7 +29,12 @@ public class TransferItem extends BaseItem implements Observer {
 
     @Override
     public void update(double byteRate, long elapsedTime, int bytesRead, int totalBytesToRead) {
-        this.transferBar.update(byteRate, elapsedTime, bytesRead, totalBytesToRead);
+        double percentage = (double) bytesRead / (double) totalBytesToRead;
+        SwingUtilities.invokeLater(() -> {
+            transferBar.setPercentage(percentage);
+            transferBar.setElapsedTime(elapsedTime);
+            transferTable.repaint();
+        });
     }
 
     public enum Status {

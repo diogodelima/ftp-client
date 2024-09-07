@@ -183,7 +183,7 @@ public class FTPController implements AutoCloseable {
         if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException("Failed to enter in ASCII mode", response);
     }
 
-    public CompletableFuture<File> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
+    public CompletableFuture<Void> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
 
         enterInPassiveMode(true);
 
@@ -202,16 +202,12 @@ public class FTPController implements AutoCloseable {
         return CompletableFuture.supplyAsync(() -> {
 
             String finalLocalPathname;
-
-            if(pathname.contains("/")){
+            if(pathname.contains("/"))
                 finalLocalPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
-            }else{
+            else
                 finalLocalPathname = localPathname + pathname;
-            }
 
-            File file = new File(finalLocalPathname);
-
-            try(FileOutputStream fileOutputStream = new FileOutputStream(file);
+            try(FileOutputStream fileOutputStream = new FileOutputStream(finalLocalPathname);
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
 
                 byte[] data = (byte[]) this.dataConnection.getResponse();
@@ -220,7 +216,7 @@ public class FTPController implements AutoCloseable {
                 ControlResponse closeDataResponse = controlConnection.getResponse();
                 if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
                 closeDataConnection();
-                return file;
+                return null;
 
             }catch (IOException | FTPException e) {
                 throw new RuntimeException(e);
@@ -230,7 +226,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<File> downloadFile(String pathname, String localPathname) throws FTPException {
+    public CompletableFuture<Void> downloadFile(String pathname, String localPathname) throws FTPException {
         return downloadFile(pathname, localPathname, null);
     }
 

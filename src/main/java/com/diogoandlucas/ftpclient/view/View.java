@@ -38,13 +38,12 @@ public class View extends JFrame {
                 ViewUtil.createWarningDialog(this, "Erro ao obter os ficheiros.", "Erro");
             }
 
-
         }), BorderLayout.NORTH);
+
         JPanel panel = new JPanel();
         panel.setBackground(ColorConstants.BACKGROUND);
         this.add(panel, BorderLayout.CENTER);
         panel.setLayout(new GridLayout(1, 2, 10, 5));
-
         panel.add(local);
         panel.add(remote);
 

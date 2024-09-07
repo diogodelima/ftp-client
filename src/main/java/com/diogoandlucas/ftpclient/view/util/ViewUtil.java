@@ -10,7 +10,7 @@ import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
 import com.diogoandlucas.ftpclient.view.components.RoundedTextField;
 import com.diogoandlucas.ftpclient.view.panel.file.table.FileTable;
-import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;
+import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBarRenderer;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.table.TransferTable;
 import com.diogoandlucas.ftpclient.view.popup.Popup;
 import com.diogoandlucas.ftpclient.view.popup.PopupBuilder;
@@ -35,11 +35,7 @@ public class ViewUtil{
     }
 
     public static JTextField createTextField(int columns, Color background, Color foreground, boolean password){
-        JTextField textField;
-        if(password)
-            textField = new RoundedPasswordField(columns);
-        else
-            textField = new RoundedTextField(columns);
+        JTextField textField = password ? new RoundedPasswordField(columns) : new RoundedTextField(columns);
         textField.setBackground(background);
         textField.setForeground(foreground);
         textField.setCaretColor(foreground);
@@ -182,15 +178,14 @@ public class ViewUtil{
                 .addItem(new PopupItem("Transferir", e -> {
 
                     Item item = fileTable.getItem(fileTable.getSelectedRow());
-                    TransferBar transferBar = new TransferBar();
-                    transferTable.getColumnModel().getColumn(3).setCellRenderer((_, _, _, _, _, _) -> transferBar);
-                    TransferItem transferItem = new TransferItem(item, transferBar, TransferItem.Status.DOWNLOAD);
+                    TransferItem transferItem = new TransferItem(item, transferTable, TransferItem.Status.DOWNLOAD);
                     transferTable.addItem(transferItem);
+
                     try {
                         controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
-                                .thenAccept(file -> transferTable.removeItem(transferItem));
-                    } catch (FTPException ex) {
-                        throw new RuntimeException(ex);
+                                .thenAccept(_ -> transferTable.removeItem(transferItem));
+                    } catch (FTPException ignored) {
+                        createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro");
                     }
 
 
@@ -200,15 +195,17 @@ public class ViewUtil{
 
                     try {
                         createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
+
                             try {
                                 controller.makeDirectory(response);
                                 fileTable.setItems(controller.getItems());
-                            } catch (FTPException ex) {
-                                throw new RuntimeException(ex);
+                            } catch (FTPException ignored) {
+                                createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro");
                             }
+
                         }, controller.getCurrentDirectory());
-                    } catch (FTPException ex) {
-                        throw new RuntimeException(ex);
+                    } catch (FTPException ignored) {
+                        createWarningDialog(frame, "<html>Ocorreu um erro ao obter o diretório atual.</html>", "Erro");
                     }
 
                 }))

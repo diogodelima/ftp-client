@@ -21,13 +21,13 @@ public class RoundedButton extends JButton {
 
         Graphics2D g2 = (Graphics2D) g.create();
 
-        if (getModel().isPressed() && getClickBackground() != null) {
+        if (getModel().isPressed() && getClickBackground() != null)
             g2.setPaint(getClickBackground());
-        }else if (getModel().isRollover() && getHoverBackground() != null) {
+        else if (getModel().isRollover() && getHoverBackground() != null)
             g2.setPaint(getHoverBackground());
-        }else {
+        else
             g2.setPaint(getBackground());
-        }
+
 
         g2.fill(((RoundedBorder) getBorder()).getBorderShape(0, 0, getWidth() - 1, getHeight() - 1));
         g2.dispose();

@@ -3,6 +3,7 @@ package com.diogoandlucas.ftpclient.model.client.ftp.data.impl;
 import com.diogoandlucas.ftpclient.model.client.ftp.data.DataFTP;
 import com.diogoandlucas.ftpclient.model.observer.Observer;
 
+import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +49,8 @@ public class DataBinaryFTP extends DataFTP<byte[]> {
                 totalBytesRead += bytesRead;
                 long elapsedTime = System.currentTimeMillis() - startTime;
                 double byteRate = (double) totalBytesRead / (double) elapsedTime;
-                notifyObservers(byteRate, elapsedTime, totalBytesRead);
+                int finalTotalBytesRead = totalBytesRead;
+                notifyObservers(byteRate, elapsedTime, finalTotalBytesRead);
             }
 
         }catch(IOException e){
