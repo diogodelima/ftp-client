@@ -1,6 +1,7 @@
 package com.diogoandlucas.ftpclient.view.panel.tranfer.icon;
 
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
+import com.diogoandlucas.ftpclient.util.Utils;
 import com.diogoandlucas.ftpclient.view.components.DualColorLabel;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class TransferBar extends JPanel {
     }
 
     public void setElapsedTime(long elapsedTime) {
-        this.elapsedTimeLabel.setText(String.valueOf(elapsedTime));
+        this.elapsedTimeLabel.setText(Utils.formatTime(elapsedTime));
     }
 
 }

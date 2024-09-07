@@ -2,6 +2,7 @@ package com.diogoandlucas.ftpclient.view.panel.file.table;
 
 import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
+import com.diogoandlucas.ftpclient.util.Utils;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -55,7 +56,7 @@ public class FileTableModel extends AbstractTableModel {
 
         return switch (columnIndex) {
             case 0 -> item.getName();
-            case 1 -> item.getSize();
+            case 1 -> Utils.formatBytes(item.getSize());
             case 2 -> (item instanceof FileItem) ? "Ficheiro" : "Pasta de Ficheiros";
             case 3 -> formatter.format(item.getLastModify());
             default -> throw new IllegalStateException("Unexpected value: " + columnIndex);

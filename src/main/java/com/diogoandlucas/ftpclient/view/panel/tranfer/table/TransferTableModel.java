@@ -1,6 +1,7 @@
 package com.diogoandlucas.ftpclient.view.panel.tranfer.table;
 
 import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
+import com.diogoandlucas.ftpclient.util.Utils;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBar;
 
 import javax.swing.event.TableModelListener;
@@ -54,7 +55,7 @@ public class TransferTableModel implements TableModel {
 
         return switch (columnIndex) {
             case 0 -> item.getName();
-            case 1 -> item.getSize();
+            case 1 -> Utils.formatBytes(item.getSize());
             case 2 -> item.getStatus().name();
             case 3 -> item.getTransferBar();
             default -> throw new IllegalStateException("Unexpected value: " + columnIndex);
