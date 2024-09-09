@@ -31,12 +31,12 @@ public class View extends JFrame {
 
         this.add(new CredentialsPanel(ftpController, this, _ -> {
 
-            try {
-                List<Item> items = ftpController.getItems();
-                remote.setItems(items);
-            } catch (FTPException e) {
-                ViewUtil.createWarningDialog(this, "Erro ao obter os ficheiros.", "Erro");
-            }
+            ftpController.getItems()
+                    .thenAccept(remote::setItems)
+                    .exceptionally(_ -> {
+                        ViewUtil.createWarningDialog(this, "Erro ao obter os ficheiros.", "Erro");
+                        return null;
+                    });
 
         }), BorderLayout.NORTH);
 
@@ -62,7 +62,7 @@ public class View extends JFrame {
             }
         });
 
-        ViewUtil.createPopupServer(this, remote.getTable(), transferPanel.getTable(), ftpController);
+        ViewUtil.createPopupServer(this, remote.getTable(), transferPanel.getTable(), ftpController, "/");
 
         this.setVisible(true);
     }

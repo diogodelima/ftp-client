@@ -2,7 +2,7 @@ package com.diogoandlucas.ftpclient.exceptions;
 
 import com.diogoandlucas.ftpclient.model.client.ftp.control.ControlResponse;
 
-public class FTPException extends Exception{
+public class FTPException extends RuntimeException {
 
     private final ControlResponse response;
 

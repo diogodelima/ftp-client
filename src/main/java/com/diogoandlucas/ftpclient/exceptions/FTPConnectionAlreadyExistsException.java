@@ -1,6 +1,6 @@
 package com.diogoandlucas.ftpclient.exceptions;
 
-public class FTPConnectionAlreadyExistsException extends Exception {
+public class FTPConnectionAlreadyExistsException extends RuntimeException {
 
     public FTPConnectionAlreadyExistsException(String message) {
         super(message);

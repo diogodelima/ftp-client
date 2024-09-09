@@ -47,129 +47,221 @@ public class FTPController implements AutoCloseable {
         if(response.getCode() != ControlResponseCode.CODE_230) throw new FTPInvalidCredentialsException(response);
     }
 
-    public void enterInPassiveMode(boolean binary) throws FTPException {
-        ControlResponse response = controlConnection.sendMessage(ControlCommand.PASV);
-        if(response.getCode() != ControlResponseCode.CODE_227) throw new FTPException("Fail entering passive mode", response);
-        String[] ipAndPort = controlConnection.getIpAndPort(response.getMessage());
-        if(binary)
-            this.dataConnection = new DataBinaryFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
-        else
-            this.dataConnection = new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+    public CompletableFuture<Void> enterInPassiveMode(boolean binary) {
+
+        return CompletableFuture.supplyAsync(() -> {
+
+            ControlResponse response = controlConnection.sendMessage(ControlCommand.PASV);
+            if(response.getCode() != ControlResponseCode.CODE_227) throw new FTPException("Fail entering passive mode", response);
+
+            String[] ipAndPort = controlConnection.getIpAndPort(response.getMessage());
+            if(binary)
+                this.dataConnection = new DataBinaryFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+            else
+                this.dataConnection = new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+
+            return null;
+        });
+
     }
 
-    public String getCurrentDirectory() throws FTPException {
+    public CompletableFuture<String> getCurrentDirectory() throws FTPException {
 
-        enterInPassiveMode(false);
+        return enterInPassiveMode(false)
+                .thenApply(_ -> {
 
-        ControlResponse response = controlConnection
-                .sendMessage(ControlCommand.PWD);
+                    ControlResponse response = controlConnection
+                            .sendMessage(ControlCommand.PWD);
 
-        if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to get the current directory", response);
+                    if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to get the current directory", response);
 
-        return response.getMessage().substring(response.getMessage().indexOf("\"") + 1, response.getMessage().lastIndexOf("\""));
+                    return response.getMessage().substring(response.getMessage().indexOf("\"") + 1, response.getMessage().lastIndexOf("\""));
+                });
+
     }
 
-    public List<Item> getItems() throws FTPException {
-        enterInPassiveMode(false);
-        ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);
-        if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to open data connection", response);
-        String data = (String) dataConnection.getResponse();
-        response = controlConnection.getResponse();
-        if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
-        closeDataConnection();
+    public CompletableFuture<List<Item>> getItems() throws FTPException {
 
-        String[] singleDataArray = data.split("\n");
-        List<Item> items = new ArrayList<>();
+        return enterInPassiveMode(false)
+                .thenApply(_ -> {
 
-        for (String singleData : singleDataArray) {
+                    ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);
+                    if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to open data connection", response);
+                    String data = (String) dataConnection.getResponse();
+                    response = controlConnection.getResponse();
+                    if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
+                    closeDataConnection();
 
-            String[] information = singleData.split(";");
-            String type = information[0].substring(information[0].indexOf("=") + 1);
-            long size = Long.parseLong(information[1].substring(information[1].indexOf("=") + 1));
-            LocalDateTime lastModify = getLocalDateTime(information);
-            String name = information[3].trim();
+                    if (data.isEmpty())
+                        return List.of();
 
-            Item item;
+                    String[] singleDataArray = data.split("\n");
+                    List<Item> items = new ArrayList<>();
 
-            if (type.equalsIgnoreCase("dir"))
-                item = new DirectoryItem(name, lastModify, size);
-            else if (type.equalsIgnoreCase("file"))
-                item = new FileItem(name, lastModify, size);
-            else throw new IllegalArgumentException("Invalid type " + type);
+                    for (String singleData : singleDataArray) {
 
-            items.add(item);
-        }
+                        String[] information = singleData.split(";");
+                        String type = information[0].substring(information[0].indexOf("=") + 1);
+                        long size = Long.parseLong(information[1].substring(information[1].indexOf("=") + 1));
+                        LocalDateTime lastModify = getLocalDateTime(information);
+                        String name = information[3].trim();
 
-        return items;
+                        Item item;
+
+                        if (type.equalsIgnoreCase("dir"))
+                            item = new DirectoryItem(name, lastModify, size);
+                        else if (type.equalsIgnoreCase("file"))
+                            item = new FileItem(name, lastModify, size);
+                        else throw new IllegalArgumentException("Invalid type " + type);
+
+                        items.add(item);
+                    }
+
+                    return items;
+                });
+
     }
 
-    public void makeDirectory(String pathname) throws FTPException {
+    public CompletableFuture<Void> makeDirectory(String pathname) throws FTPException {
 
-        ControlResponse response = controlConnection
-                .argument(pathname)
-                .sendMessage(ControlCommand.MKD);
+        return CompletableFuture.supplyAsync(() -> {
 
-        if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to create the directory", response);
+            ControlResponse response = controlConnection
+                    .argument(pathname)
+                    .sendMessage(ControlCommand.MKD);
+
+            if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to create the directory", response);
+
+            return null;
+        });
     }
 
-    public void makeFile(String filename) throws FTPException {
+    public CompletableFuture<Void> makeFile(String filename) throws FTPException {
 
-        enterInPassiveMode(false);
-        ControlResponse response = controlConnection
-                .argument(filename)
-                .sendMessage(ControlCommand.STOR);
+        return enterInPassiveMode(false)
+                .thenApply(_ -> {
+                    ControlResponse response = controlConnection
+                            .argument(filename)
+                            .sendMessage(ControlCommand.STOR);
 
-        System.out.println(response);
+                    if (response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to create the file", response);
 
-        if (response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to create the file", response);
+                    closeDataConnection();
+                    response = controlConnection.getResponse();
 
-        closeDataConnection();
-        response = controlConnection.getResponse();
+                    if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to create the file", response);
 
-        if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to create the file", response);
+                    return null;
+                });
+
     }
 
-    public void renameItem(String from, String to) throws FTPException {
+    public CompletableFuture<Void> renameItem(String from, String to) throws FTPException {
 
-        ControlResponse response = controlConnection
-                .argument(from)
-                .sendMessage(ControlCommand.RNFR);
+        return CompletableFuture.supplyAsync(() -> {
 
-        if (response.getCode() != ControlResponseCode.CODE_350) throw new FTPException("Failed to rename the file", response);
+            ControlResponse response = controlConnection
+                    .argument(from)
+                    .sendMessage(ControlCommand.RNFR);
 
-        response = controlConnection
-                .argument(to)
-                .sendMessage(ControlCommand.RNTO);
+            if (response.getCode() != ControlResponseCode.CODE_350) throw new FTPException("Failed to rename the file", response);
 
-        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to rename the file", response);
+            response = controlConnection
+                    .argument(to)
+                    .sendMessage(ControlCommand.RNTO);
+
+            if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to rename the file", response);
+
+            return null;
+        });
+
     }
 
-    public void removeDirectory(String pathname) throws FTPException {
+    public CompletableFuture<Void> removeDirectory(String pathname) throws FTPException {
 
-        ControlResponse response = controlConnection
-                .argument(pathname)
-                .sendMessage(ControlCommand.RMD);
+        return CompletableFuture.supplyAsync(() -> {
+            ControlResponse response = controlConnection
+                    .argument(pathname)
+                    .sendMessage(ControlCommand.RMD);
 
-        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove directory", response);
+            if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove directory", response);
+
+            return null;
+        });
     }
 
-    public void removeFile(String pathname) throws FTPException {
+    public CompletableFuture<Void> removeFile(String pathname) throws FTPException {
 
-        ControlResponse response = controlConnection
-                .argument(pathname)
-                .sendMessage(ControlCommand.DELE);
+        return CompletableFuture.supplyAsync(() -> {
+            ControlResponse response = controlConnection
+                    .argument(pathname)
+                    .sendMessage(ControlCommand.DELE);
 
-        if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove file", response);
+            if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove file", response);
+
+            return null;
+        });
     }
 
-    public int getSizeOfFile(String pathname) throws FTPException {
+    public CompletableFuture<Integer> getSizeOfFile(String pathname) throws FTPException {
 
-        ControlResponse response = controlConnection
-                .argument(pathname)
-                .sendMessage(ControlCommand.SIZE);
+        return CompletableFuture.supplyAsync(() -> {
 
-        if (response.getCode() != ControlResponseCode.CODE_213) throw new FTPException("Failed to remove file", response);
-        return Integer.parseInt(response.getMessage().trim());
+            ControlResponse response = controlConnection
+                    .argument(pathname)
+                    .sendMessage(ControlCommand.SIZE);
+
+            if (response.getCode() != ControlResponseCode.CODE_213) throw new FTPException("Failed to remove file", response);
+
+            return Integer.parseInt(response.getMessage().trim());
+        });
+    }
+
+    public CompletableFuture<Void> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
+
+        return enterInPassiveMode(true)
+                .thenCombine(getSizeOfFile(pathname), (_, size) -> size)
+                .thenApply(size -> {
+
+                    DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) this.dataConnection;
+                    dataBinaryFTP.setTotalBytesToRead(size);
+
+                    if (observer != null)
+                        ((DataBinaryFTP) this.dataConnection).addObserver(observer);
+
+                    ControlResponse response = controlConnection
+                            .argument(pathname)
+                            .sendMessage(ControlCommand.RETR);
+
+                    if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to download file", response);
+
+                    String finalLocalPathname;
+                    if(pathname.contains("/"))
+                        finalLocalPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
+                    else
+                        finalLocalPathname = localPathname + pathname;
+
+                    try(FileOutputStream fileOutputStream = new FileOutputStream(finalLocalPathname);
+                        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
+
+                        byte[] data = (byte[]) this.dataConnection.getResponse();
+                        bufferedOutputStream.write(data);
+                        bufferedOutputStream.flush();
+                        ControlResponse closeDataResponse = controlConnection.getResponse();
+                        if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
+                        closeDataConnection();
+                        return null;
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                });
+
+    }
+
+    public CompletableFuture<Void> downloadFile(String pathname, String localPathname) throws FTPException {
+        return downloadFile(pathname, localPathname, null);
     }
 
     @Override
@@ -197,69 +289,6 @@ public class FTPController implements AutoCloseable {
         int minute = Integer.parseInt(dateFormatted.substring(10, 12));
         int second = Integer.parseInt(dateFormatted.substring(12, 14));
         return LocalDateTime.of(year, month, day, hour, minute, second);
-    }
-
-    public void setBinaryMode() throws FTPException {
-
-        ControlResponse response = controlConnection
-                .argument("I")
-                .sendMessage(ControlCommand.TYPE);
-
-        if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException("Failed to enter in Binary mode", response);
-    }
-
-    public void setAsciiMode() throws FTPException {
-        ControlResponse response = controlConnection
-                .argument("A")
-                .sendMessage(ControlCommand.TYPE);
-        if(response.getCode() != ControlResponseCode.CODE_200) throw new FTPException("Failed to enter in ASCII mode", response);
-    }
-
-    public CompletableFuture<Void> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
-
-        enterInPassiveMode(true);
-
-        DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) this.dataConnection;
-        dataBinaryFTP.setTotalBytesToRead(getSizeOfFile(pathname));
-
-        if (observer != null)
-            ((DataBinaryFTP) this.dataConnection).addObserver(observer);
-
-        ControlResponse response = controlConnection
-                .argument(pathname)
-                .sendMessage(ControlCommand.RETR);
-
-        if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to download file", response);
-
-        return CompletableFuture.supplyAsync(() -> {
-
-            String finalLocalPathname;
-            if(pathname.contains("/"))
-                finalLocalPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
-            else
-                finalLocalPathname = localPathname + pathname;
-
-            try(FileOutputStream fileOutputStream = new FileOutputStream(finalLocalPathname);
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
-
-                byte[] data = (byte[]) this.dataConnection.getResponse();
-                bufferedOutputStream.write(data);
-                bufferedOutputStream.flush();
-                ControlResponse closeDataResponse = controlConnection.getResponse();
-                if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
-                closeDataConnection();
-                return null;
-
-            }catch (IOException | FTPException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
-
-    }
-
-    public CompletableFuture<Void> downloadFile(String pathname, String localPathname) throws FTPException {
-        return downloadFile(pathname, localPathname, null);
     }
 
 }

@@ -11,7 +11,6 @@ import com.diogoandlucas.ftpclient.view.components.RoundedButton;
 import com.diogoandlucas.ftpclient.view.components.RoundedPasswordField;
 import com.diogoandlucas.ftpclient.view.components.RoundedTextField;
 import com.diogoandlucas.ftpclient.view.panel.file.table.FileTable;
-import com.diogoandlucas.ftpclient.view.panel.tranfer.icon.TransferBarRenderer;
 import com.diogoandlucas.ftpclient.view.panel.tranfer.table.TransferTable;
 import com.diogoandlucas.ftpclient.view.popup.Popup;
 import com.diogoandlucas.ftpclient.view.popup.PopupBuilder;
@@ -24,8 +23,8 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ViewUtil{
@@ -172,7 +171,7 @@ public class ViewUtil{
                 .build();
     }
 
-    public static Popup createPopupServer(JFrame frame, FileTable fileTable, TransferTable transferTable, FTPController controller){
+    public static Popup createPopupServer(JFrame frame, FileTable fileTable, TransferTable transferTable, FTPController controller, String currentDirectory){
 
         return PopupBuilder
                 .create()
@@ -183,80 +182,90 @@ public class ViewUtil{
                     TransferItem transferItem = new TransferItem(item, transferTable, TransferItem.Status.DOWNLOAD);
                     transferTable.addItem(transferItem);
 
-                    try {
-                        controller.downloadFile(item.getName(), "C:\\Projects\\ClientFTP\\workbench\\", transferItem)
-                                .thenAccept(_ -> transferTable.removeItem(transferItem));
-                    } catch (FTPException ignored) {
-                        createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro");
-                    }
-
+                    controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
+                            .thenAccept(_ -> transferTable.removeItem(transferItem))
+                            .exceptionally(_ -> {
+                                createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro");
+                                return null;
+                            });
 
                 }))
                 .addSeparator()
                 .addItem(new PopupItem("Criar Pasta", e -> {
 
-                    try {
-                        createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
+                    createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
 
-                            try {
-                                controller.makeDirectory(response);
-                                fileTable.setItems(controller.getItems());
-                            } catch (FTPException ignored) {
-                                createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro");
-                            }
+                        controller.makeDirectory(response)
+                                .thenCombine(controller.getItems(), (_, items) -> {
+                                    fileTable.setItems(items);
+                                    return null;
+                                })
+                                .exceptionally((_ -> {
+                                    SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro"));
+                                    return null;
+                                }));
 
-                        }, controller.getCurrentDirectory());
-                    } catch (FTPException ignored) {
-                        createWarningDialog(frame, "<html>Ocorreu um erro ao obter o diretório atual.</html>", "Erro");
-                    }
+                    }, currentDirectory);
 
                 }))
                 .addItem(new PopupItem("Criar Ficheiro", e -> {
 
                     createInputDialog(frame, "<html>Insira o nome do ficheiro a ser criado: </html>", "Criar ficheiro", response -> {
 
-                        try {
-                            controller.makeFile(response);
-                            fileTable.setItems(controller.getItems());
-                        } catch (FTPException ignored) {
-                            createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro");
-                        }
+                        controller.makeFile(response)
+                                .thenCombine(controller.getItems(), (_, items) -> {
+                                    fileTable.setItems(items);
+                                    return null;
+                                })
+                                .exceptionally(_ -> {
+                                    createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro");
+                                    return null;
+                                });
 
                     },"");
 
                 }))
                 .addItem(new PopupItem("Atualizar", e -> {
-                    try {
-                        fileTable.setItems(controller.getItems());
-                    } catch (FTPException ex) {
-                        createWarningDialog(frame, "<html>Ocorreu um erro ao atualizar os itens.</html>", "Erro");
-                    }
+
+                    controller.getItems()
+                            .thenAccept(fileTable::setItems)
+                            .exceptionally(_ -> {
+                                createWarningDialog(frame, "<html>Ocorreu um erro ao atualizar os itens.</html>", "Erro");
+                                return null;
+                            });
+
                 }))
                 .addSeparator()
                 .addItem(new PopupItem("Eliminar", e -> {
 
                     Item item = fileTable.getItem(fileTable.getSelectedRow());
-                    try {
-                        if (item instanceof FileItem) {
-                            controller.removeFile(item.getName());
-                        } else {
-                            controller.removeDirectory(controller.getCurrentDirectory());
-                        }
-                        fileTable.setItems(controller.getItems());
-                    }catch(FTPException exception){
-                        createWarningDialog(frame, "<html>Ocorreu um erro ao tentar eliminar o item.</html>", "Erro");
-                    }
+
+                    CompletableFuture<Void> cf = item instanceof FileItem ? controller.removeFile(item.getName()) : controller.removeDirectory(item.getName());
+
+                    cf
+                            .thenCombine(controller.getItems(), (_, items) -> {
+                                fileTable.setItems(items);
+                                return null;
+                            })
+                            .exceptionally(_ -> {
+                                createWarningDialog(frame, "<html>Ocorreu um erro ao tentar eliminar o item.</html>", "Erro");
+                                return null;
+                            });
+
                 }))
                 .addItem(new PopupItem("Mudar o nome", e -> {
                     String filename = fileTable.getItem(fileTable.getSelectedRow()).getName();
                     createInputDialog(frame, "<html>Insira o nome que deseja no item: </html>", "Renomear item", response -> {
 
-                        try {
-                            controller.renameItem(filename, response);
-                            fileTable.setItems(controller.getItems());
-                        } catch (FTPException ignored) {
-                            createWarningDialog(frame, "<html>Ocorreu um erro ao renomear o item.</html>", "Erro");
-                        }
+                        controller.renameItem(filename, response)
+                                .thenCombine(controller.getItems(), (_, items) -> {
+                                    fileTable.setItems(items);
+                                    return null;
+                                })
+                                .exceptionally(_ -> {
+                                    createWarningDialog(frame, "<html>Ocorreu um erro ao renomear o item.</html>", "Erro");
+                                    return null;
+                                });
 
                     },filename);
 
