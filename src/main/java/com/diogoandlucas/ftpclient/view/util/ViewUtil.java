@@ -3,7 +3,6 @@ package com.diogoandlucas.ftpclient.view.util;
 import com.diogoandlucas.ftpclient.Application;
 import com.diogoandlucas.ftpclient.constants.ColorConstants;
 import com.diogoandlucas.ftpclient.controller.FTPController;
-import com.diogoandlucas.ftpclient.exceptions.FTPException;
 import com.diogoandlucas.ftpclient.model.item.Item;
 import com.diogoandlucas.ftpclient.model.item.impl.FileItem;
 import com.diogoandlucas.ftpclient.model.item.impl.TransferItem;
@@ -183,7 +182,7 @@ public class ViewUtil{
                     transferTable.addItem(transferItem);
 
                     controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
-                            .thenAccept(_ -> transferTable.removeItem(transferItem))
+                            .thenAccept(_ -> SwingUtilities.invokeLater(() -> transferTable.removeItem(transferItem)))
                             .exceptionally(_ -> {
                                 SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro"));
                                 return null;
@@ -196,10 +195,8 @@ public class ViewUtil{
                     createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
 
                         controller.makeDirectory(response)
-                                .thenCombine(controller.getItems(), (_, items) -> {
-                                    fileTable.setItems(items);
-                                    return null;
-                                })
+                                .thenCompose(_ -> controller.getItems())
+                                .thenAccept(items -> SwingUtilities.invokeLater(() -> fileTable.setItems(items)))
                                 .exceptionally((_ -> {
                                     SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro"));
                                     return null;
@@ -211,13 +208,12 @@ public class ViewUtil{
                 .addItem(new PopupItem("Criar Ficheiro", e -> {
 
                     createInputDialog(frame, "<html>Insira o nome do ficheiro a ser criado: </html>", "Criar ficheiro", response -> {
-
                         controller.makeFile(response)
-                                .thenCombine(controller.getItems(), (_, items) -> {
-                                    fileTable.setItems(items);
-                                    return null;
+                                .thenCompose(_ -> controller.getItems())
+                                .thenAccept(items -> {
+                                    SwingUtilities.invokeLater(() -> fileTable.setItems(items));
                                 })
-                                .exceptionally(_ -> {
+                                .exceptionally(t -> {
                                     SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar o ficheiro.</html>", "Erro"));
                                     return null;
                                 });
@@ -243,10 +239,8 @@ public class ViewUtil{
                     CompletableFuture<Void> cf = item instanceof FileItem ? controller.removeFile(item.getName()) : controller.removeDirectory(item.getName());
 
                     cf
-                            .thenCombine(controller.getItems(), (_, items) -> {
-                                fileTable.setItems(items);
-                                return null;
-                            })
+                            .thenCompose(_ -> controller.getItems())
+                            .thenAccept(items -> SwingUtilities.invokeLater(() -> fileTable.setItems(items)))
                             .exceptionally(_ -> {
                                 SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao tentar eliminar o item.</html>", "Erro"));
                                 return null;
@@ -258,10 +252,8 @@ public class ViewUtil{
                     createInputDialog(frame, "<html>Insira o nome que deseja no item: </html>", "Renomear item", response -> {
 
                         controller.renameItem(filename, response)
-                                .thenCombine(controller.getItems(), (_, items) -> {
-                                    fileTable.setItems(items);
-                                    return null;
-                                })
+                                .thenCompose(_ -> controller.getItems())
+                                .thenAccept(items -> SwingUtilities.invokeLater(() -> fileTable.setItems(items)))
                                 .exceptionally(_ -> {
                                     SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao renomear o item.</html>", "Erro"));
                                     return null;
@@ -285,10 +277,8 @@ public class ViewUtil{
                     createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
 
                         controller.makeDirectory(response)
-                                .thenCombine(controller.getItems(), (_, items) -> {
-                                    fileTable.setItems(items);
-                                    return null;
-                                })
+                                .thenCompose(_ -> controller.getItems())
+                                .thenAccept(items -> SwingUtilities.invokeLater(() -> fileTable.setItems(items)))
                                 .exceptionally((_ -> {
                                     SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro"));
                                     return null;
@@ -301,12 +291,10 @@ public class ViewUtil{
 
                     createInputDialog(frame, "<html>Insira o nome do ficheiro a ser criado: </html>", "Criar ficheiro", response -> {
 
-                        System.out.println(response);
-
                         controller.makeFile(response)
-                                .thenCombine(controller.getItems(), (_, items) -> {
-                                    fileTable.setItems(items);
-                                    return null;
+                                .thenCompose(_ -> controller.getItems())
+                                .thenAccept(items -> {
+                                    SwingUtilities.invokeLater(() -> fileTable.setItems(items));
                                 })
                                 .exceptionally(_ -> {
                                     SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar o ficheiro.</html>", "Erro"));

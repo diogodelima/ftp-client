@@ -49,7 +49,7 @@ public class FTPController implements AutoCloseable {
 
     public CompletableFuture<Void> enterInPassiveMode(boolean binary) {
 
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
 
             ControlResponse response = controlConnection.sendMessage(ControlCommand.PASV);
             if(response.getCode() != ControlResponseCode.CODE_227) throw new FTPException("Fail entering passive mode", response);
@@ -60,7 +60,6 @@ public class FTPController implements AutoCloseable {
             else
                 this.dataConnection = new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
 
-            return null;
         });
 
     }
@@ -124,22 +123,20 @@ public class FTPController implements AutoCloseable {
 
     public CompletableFuture<Void> makeDirectory(String pathname){
 
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
 
             ControlResponse response = controlConnection
                     .argument(pathname)
                     .sendMessage(ControlCommand.MKD);
 
             if (response.getCode() != ControlResponseCode.CODE_257) throw new FTPException("Failed to create the directory", response);
-
-            return null;
         });
     }
 
     public CompletableFuture<Void> makeFile(String filename){
 
         return enterInPassiveMode(false)
-                .thenApply(_ -> {
+                .thenAccept(_ -> {
                     ControlResponse response = controlConnection
                             .argument(filename)
                             .sendMessage(ControlCommand.STOR);
@@ -151,14 +148,13 @@ public class FTPController implements AutoCloseable {
 
                     if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to create the file", response);
 
-                    return null;
                 });
 
     }
 
     public CompletableFuture<Void> renameItem(String from, String to){
 
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
 
             ControlResponse response = controlConnection
                     .argument(from)
@@ -171,35 +167,29 @@ public class FTPController implements AutoCloseable {
                     .sendMessage(ControlCommand.RNTO);
 
             if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to rename the file", response);
-
-            return null;
         });
 
     }
 
     public CompletableFuture<Void> removeDirectory(String pathname){
 
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
             ControlResponse response = controlConnection
                     .argument(pathname)
                     .sendMessage(ControlCommand.RMD);
 
             if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove directory", response);
-
-            return null;
         });
     }
 
     public CompletableFuture<Void> removeFile(String pathname){
 
-        return CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.runAsync(() -> {
             ControlResponse response = controlConnection
                     .argument(pathname)
                     .sendMessage(ControlCommand.DELE);
 
             if (response.getCode() != ControlResponseCode.CODE_250) throw new FTPException("Failed to remove file", response);
-
-            return null;
         });
     }
 
@@ -221,7 +211,7 @@ public class FTPController implements AutoCloseable {
 
         return enterInPassiveMode(true)
                 .thenCombine(getSizeOfFile(pathname), (_, size) -> size)
-                .thenApply(size -> {
+                .thenAccept(size -> {
 
                     DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) this.dataConnection;
                     dataBinaryFTP.setTotalBytesToRead(size);
@@ -250,7 +240,6 @@ public class FTPController implements AutoCloseable {
                         ControlResponse closeDataResponse = controlConnection.getResponse();
                         if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
                         closeDataConnection();
-                        return null;
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -274,6 +263,7 @@ public class FTPController implements AutoCloseable {
         if(dataConnection != null) {
             try {
                 dataConnection.close();
+                dataConnection = null;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
