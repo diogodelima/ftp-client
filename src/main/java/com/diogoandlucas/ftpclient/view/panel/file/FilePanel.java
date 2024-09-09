@@ -11,6 +11,7 @@ import java.util.List;
 public class FilePanel extends JPanel {
 
     private final FileTable table = new FileTable();
+    private final JScrollPane scrollPane = new JScrollPane(table);
 
     public FilePanel(String name) {
 
@@ -19,7 +20,6 @@ public class FilePanel extends JPanel {
         this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         this.add(new AddressPanel(name), BorderLayout.NORTH);
 
-        JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.getViewport().setBackground(ColorConstants.BACKGROUND);
         scrollPane.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, ColorConstants.LABEL));
 
@@ -32,5 +32,9 @@ public class FilePanel extends JPanel {
 
     public FileTable getTable() {
         return table;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
     }
 }

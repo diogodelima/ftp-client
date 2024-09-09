@@ -65,7 +65,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<String> getCurrentDirectory() throws FTPException {
+    public CompletableFuture<String> getCurrentDirectory(){
 
         return enterInPassiveMode(false)
                 .thenApply(_ -> {
@@ -80,7 +80,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<List<Item>> getItems() throws FTPException {
+    public CompletableFuture<List<Item>> getItems(){
 
         return enterInPassiveMode(false)
                 .thenApply(_ -> {
@@ -122,7 +122,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<Void> makeDirectory(String pathname) throws FTPException {
+    public CompletableFuture<Void> makeDirectory(String pathname){
 
         return CompletableFuture.supplyAsync(() -> {
 
@@ -136,7 +136,7 @@ public class FTPController implements AutoCloseable {
         });
     }
 
-    public CompletableFuture<Void> makeFile(String filename) throws FTPException {
+    public CompletableFuture<Void> makeFile(String filename){
 
         return enterInPassiveMode(false)
                 .thenApply(_ -> {
@@ -156,7 +156,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<Void> renameItem(String from, String to) throws FTPException {
+    public CompletableFuture<Void> renameItem(String from, String to){
 
         return CompletableFuture.supplyAsync(() -> {
 
@@ -177,7 +177,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<Void> removeDirectory(String pathname) throws FTPException {
+    public CompletableFuture<Void> removeDirectory(String pathname){
 
         return CompletableFuture.supplyAsync(() -> {
             ControlResponse response = controlConnection
@@ -190,7 +190,7 @@ public class FTPController implements AutoCloseable {
         });
     }
 
-    public CompletableFuture<Void> removeFile(String pathname) throws FTPException {
+    public CompletableFuture<Void> removeFile(String pathname){
 
         return CompletableFuture.supplyAsync(() -> {
             ControlResponse response = controlConnection
@@ -203,7 +203,7 @@ public class FTPController implements AutoCloseable {
         });
     }
 
-    public CompletableFuture<Integer> getSizeOfFile(String pathname) throws FTPException {
+    public CompletableFuture<Integer> getSizeOfFile(String pathname){
 
         return CompletableFuture.supplyAsync(() -> {
 
@@ -217,7 +217,7 @@ public class FTPController implements AutoCloseable {
         });
     }
 
-    public CompletableFuture<Void> downloadFile(String pathname, String localPathname, Observer observer) throws FTPException {
+    public CompletableFuture<Void> downloadFile(String pathname, String localPathname, Observer observer){
 
         return enterInPassiveMode(true)
                 .thenCombine(getSizeOfFile(pathname), (_, size) -> size)
@@ -260,7 +260,7 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<Void> downloadFile(String pathname, String localPathname) throws FTPException {
+    public CompletableFuture<Void> downloadFile(String pathname, String localPathname){
         return downloadFile(pathname, localPathname, null);
     }
 

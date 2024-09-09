@@ -171,7 +171,7 @@ public class ViewUtil{
                 .build();
     }
 
-    public static Popup createPopupServer(JFrame frame, FileTable fileTable, TransferTable transferTable, FTPController controller, String currentDirectory){
+    public static Popup createPopupServerTable(JFrame frame, FileTable fileTable, TransferTable transferTable, FTPController controller, String currentDirectory){
 
         return PopupBuilder
                 .create()
@@ -185,7 +185,7 @@ public class ViewUtil{
                     controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
                             .thenAccept(_ -> transferTable.removeItem(transferItem))
                             .exceptionally(_ -> {
-                                createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro");
+                                SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro"));
                                 return null;
                             });
 
@@ -218,7 +218,7 @@ public class ViewUtil{
                                     return null;
                                 })
                                 .exceptionally(_ -> {
-                                    createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro");
+                                    SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar o ficheiro.</html>", "Erro"));
                                     return null;
                                 });
 
@@ -230,7 +230,7 @@ public class ViewUtil{
                     controller.getItems()
                             .thenAccept(fileTable::setItems)
                             .exceptionally(_ -> {
-                                createWarningDialog(frame, "<html>Ocorreu um erro ao atualizar os itens.</html>", "Erro");
+                                SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao atualizar os itens.</html>", "Erro"));
                                 return null;
                             });
 
@@ -248,7 +248,7 @@ public class ViewUtil{
                                 return null;
                             })
                             .exceptionally(_ -> {
-                                createWarningDialog(frame, "<html>Ocorreu um erro ao tentar eliminar o item.</html>", "Erro");
+                                SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao tentar eliminar o item.</html>", "Erro"));
                                 return null;
                             });
 
@@ -263,7 +263,7 @@ public class ViewUtil{
                                     return null;
                                 })
                                 .exceptionally(_ -> {
-                                    createWarningDialog(frame, "<html>Ocorreu um erro ao renomear o item.</html>", "Erro");
+                                    SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao renomear o item.</html>", "Erro"));
                                     return null;
                                 });
 
@@ -272,5 +272,65 @@ public class ViewUtil{
                 }))
                 .build();
     }
+
+    public static Popup createPopupServerScrollpane(JFrame frame, JScrollPane scrollPane, FileTable fileTable, FTPController controller, String currentDirectory){
+
+        return PopupBuilder
+                .create()
+                .setComponent(scrollPane)
+                .addItem(new PopupItem("Transferir", e -> {}, popupItem -> popupItem.setEnabled(false)))
+                .addSeparator()
+                .addItem(new PopupItem("Criar Pasta", e -> {
+
+                    createInputDialog(frame, "<html>Insira o nome da pasta a ser criada: </html>", "Criar pasta", response -> {
+
+                        controller.makeDirectory(response)
+                                .thenCombine(controller.getItems(), (_, items) -> {
+                                    fileTable.setItems(items);
+                                    return null;
+                                })
+                                .exceptionally((_ -> {
+                                    SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar a pasta.</html>", "Erro"));
+                                    return null;
+                                }));
+
+                    }, currentDirectory);
+
+                }))
+                .addItem(new PopupItem("Criar Ficheiro", e -> {
+
+                    createInputDialog(frame, "<html>Insira o nome do ficheiro a ser criado: </html>", "Criar ficheiro", response -> {
+
+                        System.out.println(response);
+
+                        controller.makeFile(response)
+                                .thenCombine(controller.getItems(), (_, items) -> {
+                                    fileTable.setItems(items);
+                                    return null;
+                                })
+                                .exceptionally(_ -> {
+                                    SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao criar o ficheiro.</html>", "Erro"));
+                                    return null;
+                                });
+
+                    },"");
+
+                }))
+                .addItem(new PopupItem("Atualizar", e -> {
+
+                    controller.getItems()
+                            .thenAccept(fileTable::setItems)
+                            .exceptionally(_ -> {
+                                SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao atualizar os itens.</html>", "Erro"));
+                                return null;
+                            });
+
+                }))
+                .addSeparator()
+                .addItem(new PopupItem("Eliminar", e -> {}, popupItem -> popupItem.setEnabled(false)))
+                .addItem(new PopupItem("Mudar o nome", e -> {}, popupItem -> popupItem.setEnabled(false)))
+                .build();
+    }
+
 
 }
