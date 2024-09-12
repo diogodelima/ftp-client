@@ -181,9 +181,10 @@ public class ViewUtil{
                     TransferItem transferItem = new TransferItem(item, transferTable, TransferItem.Status.DOWNLOAD);
                     transferTable.addItem(transferItem);
 
-                    controller.downloadFile(item.getName(), "/home/diogo/Desktop/", transferItem)
+                    controller.downloadFile(item, "/home/diogo/Desktop/", transferItem)
                             .thenAccept(_ -> SwingUtilities.invokeLater(() -> transferTable.removeItem(transferItem)))
-                            .exceptionally(_ -> {
+                            .exceptionally(throwable -> {
+                                throwable.printStackTrace();
                                 SwingUtilities.invokeLater(() -> createWarningDialog(frame, "<html>Ocorreu um erro ao transferir o ficheiro.</html>", "Erro"));
                                 return null;
                             });

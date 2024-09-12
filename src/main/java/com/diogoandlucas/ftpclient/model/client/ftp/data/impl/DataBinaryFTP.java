@@ -12,7 +12,7 @@ import java.util.List;
 public class DataBinaryFTP extends DataFTP<byte[]> {
 
     private final List<Observer> observers = new ArrayList<>();
-    private int totalBytesToRead;
+    private long totalBytesToRead;
 
     public DataBinaryFTP(String ip, int port) {
         super(ip, port);
@@ -29,7 +29,7 @@ public class DataBinaryFTP extends DataFTP<byte[]> {
 
     }
 
-    public void setTotalBytesToRead(int totalBytesToRead) {
+    public void setTotalBytesToRead(long totalBytesToRead) {
         this.totalBytesToRead = totalBytesToRead;
     }
 

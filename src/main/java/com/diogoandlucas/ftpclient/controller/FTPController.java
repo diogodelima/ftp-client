@@ -19,13 +19,13 @@ import com.diogoandlucas.ftpclient.model.observer.Observer;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class FTPController implements AutoCloseable {
 
     private ControlFTP controlConnection;
-    private DataFTP dataConnection;
 
     public void connect(String ip, String user, String password) throws FTPInvalidServerException, FTPInvalidCredentialsException, FTPConnectionAlreadyExistsException {
 
@@ -47,19 +47,20 @@ public class FTPController implements AutoCloseable {
         if(response.getCode() != ControlResponseCode.CODE_230) throw new FTPInvalidCredentialsException(response);
     }
 
-    public CompletableFuture<Void> enterInPassiveMode(boolean binary) {
+    public CompletableFuture<DataFTP<?>> enterInPassiveMode(boolean binary) {
 
-        return CompletableFuture.runAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
 
             ControlResponse response = controlConnection.sendMessage(ControlCommand.PASV);
             if(response.getCode() != ControlResponseCode.CODE_227) throw new FTPException("Fail entering passive mode", response);
 
             String[] ipAndPort = controlConnection.getIpAndPort(response.getMessage());
-            if(binary)
-                this.dataConnection = new DataBinaryFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
-            else
-                this.dataConnection = new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+            System.out.println(Arrays.toString(ipAndPort));
 
+            if(binary)
+                return new DataBinaryFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+
+            return new DataAsciiFTP(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
         });
 
     }
@@ -82,14 +83,16 @@ public class FTPController implements AutoCloseable {
     public CompletableFuture<List<Item>> getItems(){
 
         return enterInPassiveMode(false)
-                .thenApply(_ -> {
+                .thenApply(dataFTP -> {
+
+                    DataAsciiFTP dataConnection = (DataAsciiFTP) dataFTP;
 
                     ControlResponse response = controlConnection.sendMessage(ControlCommand.MLSD);
                     if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to open data connection", response);
-                    String data = (String) dataConnection.getResponse();
+                    String data = dataConnection.getResponse();
                     response = controlConnection.getResponse();
                     if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
-                    closeDataConnection();
+                    closeDataConnection(dataFTP);
 
                     if (data.isEmpty())
                         return List.of();
@@ -136,14 +139,14 @@ public class FTPController implements AutoCloseable {
     public CompletableFuture<Void> makeFile(String filename){
 
         return enterInPassiveMode(false)
-                .thenAccept(_ -> {
+                .thenAccept(dataFTP -> {
                     ControlResponse response = controlConnection
                             .argument(filename)
                             .sendMessage(ControlCommand.STOR);
 
                     if (response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to create the file", response);
 
-                    closeDataConnection();
+                    closeDataConnection(dataFTP);
                     response = controlConnection.getResponse();
 
                     if (response.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to create the file", response);
@@ -207,39 +210,38 @@ public class FTPController implements AutoCloseable {
         });
     }
 
-    public CompletableFuture<Void> downloadFile(String pathname, String localPathname, Observer observer){
+    public CompletableFuture<Void> downloadFile(Item item, String localPathname, Observer observer){
 
         return enterInPassiveMode(true)
-                .thenCombine(getSizeOfFile(pathname), (_, size) -> size)
-                .thenAccept(size -> {
+                .thenAccept(dataFTP -> {
 
-                    DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) this.dataConnection;
-                    dataBinaryFTP.setTotalBytesToRead(size);
+                    DataBinaryFTP dataBinaryFTP = (DataBinaryFTP) dataFTP;
+                    dataBinaryFTP.setTotalBytesToRead(item.getSize());
 
                     if (observer != null)
-                        ((DataBinaryFTP) this.dataConnection).addObserver(observer);
+                        dataBinaryFTP.addObserver(observer);
 
                     ControlResponse response = controlConnection
-                            .argument(pathname)
+                            .argument(item.getName())
                             .sendMessage(ControlCommand.RETR);
 
                     if(response.getCode() != ControlResponseCode.CODE_150) throw new FTPException("Failed to download file", response);
 
                     String finalLocalPathname;
-                    if(pathname.contains("/"))
-                        finalLocalPathname = localPathname + pathname.substring(pathname.lastIndexOf("/"));
+                    if(item.getName().contains("/"))
+                        finalLocalPathname = localPathname + item.getName().substring(item.getName().lastIndexOf("/"));
                     else
-                        finalLocalPathname = localPathname + pathname;
+                        finalLocalPathname = localPathname + item.getName();
 
                     try(FileOutputStream fileOutputStream = new FileOutputStream(finalLocalPathname);
                         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);){
 
-                        byte[] data = (byte[]) this.dataConnection.getResponse();
+                        byte[] data = dataBinaryFTP.getResponse();
                         bufferedOutputStream.write(data);
                         bufferedOutputStream.flush();
                         ControlResponse closeDataResponse = controlConnection.getResponse();
                         if (closeDataResponse.getCode() != ControlResponseCode.CODE_226) throw new FTPException("Failed to close data connection", response);
-                        closeDataConnection();
+                        closeDataConnection(dataFTP);
 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -249,24 +251,20 @@ public class FTPController implements AutoCloseable {
 
     }
 
-    public CompletableFuture<Void> downloadFile(String pathname, String localPathname){
-        return downloadFile(pathname, localPathname, null);
+    public CompletableFuture<Void> downloadFile(Item item, String localPathname){
+        return downloadFile(item, localPathname, null);
     }
 
     @Override
     public void close() throws Exception {
         this.controlConnection.close();
-        closeDataConnection();
     }
 
-    private void closeDataConnection() {
-        if(dataConnection != null) {
-            try {
-                dataConnection.close();
-                dataConnection = null;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    public void closeDataConnection(DataFTP<?> dataFTP) {
+        try {
+            dataFTP.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

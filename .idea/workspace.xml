@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd43cdd7-ba02-4473-9994-f2601f5736f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_02_09_24,_15_50_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataBinaryFTP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/client/ftp/data/impl/DataBinaryFTP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/TransferItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/item/impl/TransferItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/observer/Observer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/model/observer/Observer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/view/util/ViewUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +88,7 @@
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;Application.Application (1).executor&quot;: &quot;Run&quot;,
-    &quot;Application.Application.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build ftp-client.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.ClientTest.sendMessageTest.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.ftp-client [:Application.main()].executor&quot;: &quot;Run&quot;,
@@ -252,6 +255,9 @@
       <workItem from="1725732197281" duration="48000" />
       <workItem from="1725889631517" duration="2102000" />
       <workItem from="1725897831023" duration="14000" />
+      <workItem from="1725899349541" duration="3043000" />
+      <workItem from="1725973630961" duration="5000" />
+      <workItem from="1726127700737" duration="1315000" />
     </task>
     <servers />
   </component>
@@ -260,17 +266,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/diogoandlucas/ftpclient/controller/FTPController.java</url>
-          <line>142</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

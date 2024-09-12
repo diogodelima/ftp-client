@@ -28,7 +28,7 @@ public class TransferItem extends BaseItem implements Observer {
     }
 
     @Override
-    public void update(double byteRate, long elapsedTime, int bytesRead, int totalBytesToRead) {
+    public void update(double byteRate, long elapsedTime, int bytesRead, long totalBytesToRead) {
         double percentage = (double) bytesRead / (double) totalBytesToRead;
         SwingUtilities.invokeLater(() -> {
             transferBar.setPercentage(percentage);
